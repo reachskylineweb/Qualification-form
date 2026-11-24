@@ -43,11 +43,12 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
     text: textMessage,
   });
 
-  // 1. Try via Vite/Vercel Rewrite (/whatsscale-api/api/sendText), Vercel Function (/api/send-whatsapp), or cPanel/Hostinger PHP Proxy (/send-whatsapp.php)
+  // 1. Try via Vite/Vercel Rewrite (/whatsscale-api/api/sendText), Vercel Function (/api/send-whatsapp), or cPanel/Hostinger PHP Proxy (./send-whatsapp.php or /send-whatsapp.php)
   for (const endpoint of [
+    './send-whatsapp.php',
+    '/send-whatsapp.php',
     '/whatsscale-api/api/sendText',
     '/api/send-whatsapp',
-    '/send-whatsapp.php',
   ]) {
     try {
       const res = await fetch(endpoint, {

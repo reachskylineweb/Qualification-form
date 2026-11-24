@@ -257,7 +257,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
             className="text-center py-20 flex flex-col items-center gap-5 max-w-xl mx-auto px-4"
           >
             <img
-              src="/logo.png"
+              src="./logo.png"
               alt="Reach Skyline"
               className="h-24 sm:h-28 w-auto object-contain"
             />
@@ -289,7 +289,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                 </p>
               </div>
               <img
-                src="/logo.png"
+                src="./logo.png"
                 alt="Reach Skyline"
                 className="h-12 w-auto object-contain self-start sm:self-auto shrink-0"
               />

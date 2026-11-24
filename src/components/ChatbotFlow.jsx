@@ -14,7 +14,7 @@ const formatTime = () => {
   return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-const RAM_SIR_AVATAR = '/ram-sir-cutout.png';
+const RAM_SIR_AVATAR = './ram-sir-cutout.png';
 const GOOGLE_CALENDAR_BOOKING_URL =
   'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0y5aksSw_dtsMEvXCJePanowkKq21cmcnfk82DJJalPPuPHV9neYrUhcdj2f5R_KadDyoHcX-z';
 
@@ -666,7 +666,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
             <div className="relative">
               <div className="w-11 h-11 rounded-full bg-black border-2 border-[#d39c12] flex items-center justify-center overflow-hidden p-1">
                 <img
-                  src="/logo.png"
+                  src="./logo.png"
                   alt="Reach Skyline"
                   className="w-full h-full object-contain object-top"
                 />
