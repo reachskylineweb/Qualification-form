@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/whatsscale-api/:path*",
+      "destination": "https://proxy.whatsscale.com/:path*"
+    }
+  ]
+}

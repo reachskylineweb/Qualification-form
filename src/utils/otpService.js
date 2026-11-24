@@ -43,22 +43,24 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
     text: textMessage,
   });
 
-  // 1. Try via local Vite Server Proxy (zero CORS issue)
-  try {
-    const res = await fetch('/whatsscale-api/api/sendText', {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': WHATSSCALE_API_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: payload,
-    });
+  // 1. Try via Vercel Serverless API (/api/send-whatsapp) or Vite Proxy (/whatsscale-api/api/sendText)
+  for (const endpoint of ['/whatsscale-api/api/sendText', '/api/send-whatsapp']) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': WHATSSCALE_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: payload,
+      });
 
-    if (res.ok) {
-      return { ok: true, status: res.status };
+      if (res.ok) {
+        return { ok: true, status: res.status };
+      }
+    } catch (err) {
+      console.warn(`Proxy attempt (${endpoint}) failed:`, err);
     }
-  } catch (err) {
-    console.warn('Vite proxy WhatsScale attempt failed, trying Apps Script relay:', err);
   }
 
   // 2. Fallback: Relay through Google Apps Script if deployed on static hosting
