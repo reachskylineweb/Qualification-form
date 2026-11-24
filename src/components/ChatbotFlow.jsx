@@ -267,9 +267,14 @@ const buildConversationFlow = (profile) => {
           reaction: `That is a consistent monthly budget to keep campaigns running steadily.`,
         },
         {
-          label: '₹2L to ₹10L / month',
-          value: '₹2L to ₹10L / month',
-          reaction: `Investing ₹2L+ a month shows you are actively pushing for scale.`,
+          label: '₹2L to ₹5L / month',
+          value: '₹2L to ₹5L / month',
+          reaction: `Investing ₹2L to ₹5L a month shows you are actively pushing for scale.`,
+        },
+        {
+          label: '₹5L to ₹10L / month',
+          value: '₹5L to ₹10L / month',
+          reaction: `A ₹5L to ₹10L monthly budget gives strong fuel for consistent customer acquisition.`,
         },
         {
           label: 'Above ₹10L / month',
@@ -451,12 +456,12 @@ const buildConversationFlow = (profile) => {
       type: 'single',
       options: [
         {
-          label: 'I will book by myself',
+          label: 'You can book by yourself',
           value: 'Book by myself',
           reaction: '',
         },
         {
-          label: 'You can make it for me',
+          label: 'By ourselves',
           value: 'Book for me (Team will contact)',
           reaction: '',
         },
@@ -472,12 +477,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
   const [isTyping, setIsTyping] = useState(true);
   const [answers, setAnswers] = useState({});
 
-  const [selectedCapabilities, setSelectedCapabilities] = useState([
-    'Automating your sales',
-    'Optimizing digital spend',
-    'Improving lead quality',
-    'Human interactive conversions',
-  ]);
+  const [selectedCapabilities, setSelectedCapabilities] = useState([]);
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [appointmentRequested, setAppointmentRequested] = useState(false);
@@ -680,11 +680,14 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
               </h2>
               <div className="mt-1 flex items-center gap-1.5">
                 {isTyping ? (
-                  <div className="flex items-end gap-0.5 h-3">
-                    <span className="w-1 h-2 bg-[#d39c12] rounded-full animate-pulse" />
-                    <span className="w-1 h-3 bg-[#d39c12] rounded-full animate-pulse [animation-delay:150ms]" />
-                    <span className="w-1 h-1.5 bg-[#d39c12] rounded-full animate-pulse [animation-delay:300ms]" />
-                    <span className="w-1 h-2.5 bg-[#d39c12] rounded-full animate-pulse [animation-delay:450ms]" />
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-medium text-[#d39c12] italic">typing</span>
+                    <div className="flex items-end gap-0.5 h-3">
+                      <span className="w-1 h-1.5 bg-[#d39c12] rounded-full animate-bounce [animation-delay:-0.3s]" />
+                      <span className="w-1 h-2.5 bg-[#d39c12] rounded-full animate-bounce [animation-delay:-0.15s]" />
+                      <span className="w-1 h-2 bg-[#d39c12] rounded-full animate-bounce" />
+                      <span className="w-1 h-3 bg-[#d39c12] rounded-full animate-pulse [animation-delay:150ms]" />
+                    </div>
                   </div>
                 ) : (
                   <span className="text-xs text-neutral-400">Online</span>
@@ -762,7 +765,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
             );
           })}
 
-          {/* Dots & Wave Indicator with Standing Ram Cutout */}
+          {/* Typing & Dotted Wave Indicator with Standing Ram Cutout */}
           {isTyping && (
             <div className="flex items-end gap-2 sm:gap-3.5 justify-start">
               <img
@@ -770,10 +773,14 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                 alt="Ram"
                 className="w-14 sm:w-28 h-auto object-contain shrink-0 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
               />
-              <div className="bg-[#171717] border border-[#d39c12]/30 px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-2xl rounded-bl-none flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#d39c12] animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-2 h-2 rounded-full bg-[#d39c12] animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-2 h-2 rounded-full bg-[#d39c12] animate-bounce" />
+              <div className="bg-[#171717] border border-[#d39c12]/30 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-bl-none flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-medium text-[#d39c12] italic">typing</span>
+                <div className="flex items-end gap-1 pt-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#d39c12] animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1.5 h-2.5 rounded-full bg-[#d39c12] animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#d39c12] animate-bounce" />
+                  <span className="w-1.5 h-2.5 rounded-full bg-[#d39c12] animate-bounce [animation-delay:0.15s]" />
+                </div>
               </div>
             </div>
           )}
@@ -860,7 +867,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   type="button"
                   disabled={selectedCapabilities.length === 0}
                   onClick={handleMultiSubmit}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] text-black text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <span>Send Selected ({selectedCapabilities.length})</span>
                   <Send className="w-4 h-4" />
