@@ -43,8 +43,12 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
     text: textMessage,
   });
 
-  // 1. Try via Vercel Serverless API (/api/send-whatsapp) or Vite Proxy (/whatsscale-api/api/sendText)
-  for (const endpoint of ['/whatsscale-api/api/sendText', '/api/send-whatsapp']) {
+  // 1. Try via Vite/Vercel Rewrite (/whatsscale-api/api/sendText), Vercel Function (/api/send-whatsapp), or cPanel/Hostinger PHP Proxy (/send-whatsapp.php)
+  for (const endpoint of [
+    '/whatsscale-api/api/sendText',
+    '/api/send-whatsapp',
+    '/send-whatsapp.php',
+  ]) {
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -55,8 +59,13 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
         body: payload,
       });
 
-      if (res.ok) {
-        return { ok: true, status: res.status };
+      const contentType = res.headers.get('content-type') || '';
+      // Ensure PHP file wasn't returned as raw text on non-PHP static servers
+      if (res.ok && !contentType.includes('application/x-httpd-php')) {
+        const text = await res.text();
+        if (!text.trim().startsWith('<?php')) {
+          return { ok: true, status: res.status };
+        }
       }
     } catch (err) {
       console.warn(`Proxy attempt (${endpoint}) failed:`, err);
