@@ -496,7 +496,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     setIsTyping(true);
     scrollToBottom();
 
-    let cumulativeDelay = 550;
+    let cumulativeDelay = 1600;
 
     messages.forEach((msg, idx) => {
       setTimeout(() => {
@@ -520,7 +520,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
       }, cumulativeDelay);
 
       // Dynamic human reading/typing pause based on message length
-      cumulativeDelay += Math.min(Math.max(msg.length * 12, 750), 1500);
+      cumulativeDelay += Math.min(Math.max(msg.length * 22, 1600), 2400);
     });
   };
 
@@ -680,13 +680,15 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
               </h2>
               <div className="mt-1 flex items-center gap-1.5">
                 {isTyping ? (
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-medium text-[#d39c12] italic">typing</span>
-                    <div className="flex items-end gap-0.5 h-3">
-                      <span className="w-1 h-1.5 bg-[#d39c12] rounded-full animate-bounce [animation-delay:-0.3s]" />
-                      <span className="w-1 h-2.5 bg-[#d39c12] rounded-full animate-bounce [animation-delay:-0.15s]" />
-                      <span className="w-1 h-2 bg-[#d39c12] rounded-full animate-bounce" />
-                      <span className="w-1 h-3 bg-[#d39c12] rounded-full animate-pulse [animation-delay:150ms]" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-[#d39c12] tracking-wide">
+                      typing
+                    </span>
+                    <div className="flex items-center gap-1 pt-0.5">
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
                     </div>
                   </div>
                 ) : (
@@ -773,13 +775,15 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                 alt="Ram"
                 className="w-14 sm:w-28 h-auto object-contain shrink-0 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
               />
-              <div className="bg-[#171717] border border-[#d39c12]/30 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-bl-none flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-medium text-[#d39c12] italic">typing</span>
-                <div className="flex items-end gap-1 pt-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#d39c12] animate-bounce [animation-delay:-0.3s]" />
-                  <span className="w-1.5 h-2.5 rounded-full bg-[#d39c12] animate-bounce [animation-delay:-0.15s]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#d39c12] animate-bounce" />
-                  <span className="w-1.5 h-2.5 rounded-full bg-[#d39c12] animate-bounce [animation-delay:0.15s]" />
+              <div className="bg-[#171717] border border-[#d39c12]/50 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl rounded-bl-none shadow-md flex items-center gap-2.5">
+                <span className="text-xs sm:text-sm font-semibold text-[#d39c12] tracking-wide">
+                  typing
+                </span>
+                <div className="flex items-center gap-1.5 pt-0.5">
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
                 </div>
               </div>
             </div>
