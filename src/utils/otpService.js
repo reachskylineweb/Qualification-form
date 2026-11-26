@@ -49,33 +49,39 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
     text: textMessage,
   });
 
-  // 1. Try via Vite/Vercel Rewrite (/whatsscale-api/api/sendText), Vercel Function (/api/send-whatsapp), or cPanel/Hostinger PHP Proxy (./send-whatsapp.php or /send-whatsapp.php)
-  for (const endpoint of [
-    './send-whatsapp.php',
-    '/send-whatsapp.php',
-    '/whatsscale-api/api/sendText',
-    '/api/send-whatsapp',
-  ]) {
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'X-Api-Key': WHATSSCALE_API_KEY,
-          'Content-Type': 'application/json',
-        },
-        body: payload,
-      });
+  const isLocalhost =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-      const contentType = res.headers.get('content-type') || '';
-      // Ensure PHP file wasn't returned as raw text on non-PHP static servers
-      if (res.ok && !contentType.includes('application/x-httpd-php')) {
-        const text = await res.text();
-        if (!text.trim().startsWith('<?php') && text.trim().length > 0) {
-          return { ok: true, status: res.status };
+  const endpoints = isLocalhost
+    ? ['/whatsscale-api/api/sendText', './send-whatsapp.php']
+    : ['./send-whatsapp.php', '/api/send-whatsapp', '/whatsscale-api/api/sendText'];
+
+  for (const endpoint of endpoints) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'X-Api-Key': WHATSSCALE_API_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: payload,
+        });
+
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && !contentType.includes('application/x-httpd-php')) {
+          const text = await res.text();
+          if (!text.trim().startsWith('<?php') && text.trim().length > 0) {
+            return { ok: true, status: res.status };
+          }
         }
+        // Retry same endpoint once only if Cloudflare returned 520/502/503
+        if (res.status < 500) break;
+      } catch (err) {
+        console.warn(`Proxy attempt (${endpoint} #${attempt}) failed:`, err);
+        break;
       }
-    } catch (err) {
-      console.warn(`Proxy attempt (${endpoint}) failed:`, err);
     }
   }
 

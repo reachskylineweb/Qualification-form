@@ -267,14 +267,16 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     return () => window.removeEventListener('storage', handleStorageSync);
   }, [generatedPhoneOtp]);
 
-  // Auto-Fetch & Digit-by-Digit Fill into the 6 OTP boxes AFTER WhatsApp message arrives (~3.8s)
+  const [otpDelivered, setOtpDelivered] = useState(false);
+
+  // Auto-Fetch & Digit-by-Digit Fill into the 6 OTP boxes as soon as WhatsApp delivery completes!
   useEffect(() => {
-    if (step !== 'whatsapp_otp' || !generatedPhoneOtp) return;
+    if (step !== 'whatsapp_otp' || !generatedPhoneOtp || !otpDelivered) return;
 
     const digits = generatedPhoneOtp.split('');
     const timers = [];
 
-    // Wait 3.8s so the WhatsApp OTP notification arrives on the user's phone first, then auto-fill 1-by-1
+    // Immediately after WhatsScale confirms WhatsApp delivery, fill the 6 boxes 1-by-1 (0.4s start, 90ms per digit)
     digits.forEach((d, idx) => {
       const t = setTimeout(() => {
         setPhoneDigits((prev) => {
@@ -282,14 +284,14 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
           next[idx] = d;
           return next;
         });
-      }, 3800 + idx * 120);
+      }, 400 + idx * 90);
       timers.push(t);
     });
 
     return () => {
       timers.forEach((t) => clearTimeout(t));
     };
-  }, [step, generatedPhoneOtp]);
+  }, [step, generatedPhoneOtp, otpDelivered]);
 
   // Instant Auto-Submit as soon as all 6 digits are entered, auto-filled, or pasted
   useEffect(() => {
@@ -300,7 +302,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
         setOtpError('');
         const timer = setTimeout(() => {
           finalizeAndEnterChat(formData);
-        }, 450);
+        }, 350);
         return () => clearTimeout(timer);
       } else {
         setOtpError('Invalid WhatsApp OTP. Please check your WhatsApp and try again.');
@@ -308,14 +310,18 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     }
   }, [phoneDigits, step, generatedPhoneOtp]);
 
-  // Send WhatsApp OTP Only
+  // Send WhatsApp OTP Only — Open OTP Screen Immediately so user never waits on the form!
   const triggerWhatsAppOtp = async () => {
     setIsSendingOtp(true);
+    setOtpDelivered(false);
     setOtpError('');
 
     const pCode = generateOtpCode();
     setGeneratedPhoneOtp(pCode);
     setPhoneDigits(['', '', '', '', '', '']);
+    setResendTimer(30);
+    // Open OTP screen immediately without blocking on the form button!
+    setStep('whatsapp_otp');
 
     try {
       localStorage.setItem(
@@ -330,7 +336,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
       // ignore storage errors
     }
 
-    // Immediately track full form submission when Continue is clicked
+    // Track full form submission immediately
     syncLeadData('FORM_SUBMITTED_OTP_SENT', {
       lastStep: 'Form Completed (At WhatsApp OTP Screen)',
       profile: getFormattedProfile(formData),
@@ -346,12 +352,12 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     setIsSendingOtp(false);
 
     if (!res.ok) {
-      setOtpError('Could not send WhatsApp OTP. Please check your WhatsApp number and try again.');
+      setOtpError('Could not auto-send WhatsApp OTP. Please tap Resend WhatsApp OTP below.');
       return;
     }
 
-    setResendTimer(30);
-    setStep('whatsapp_otp');
+    // Trigger instant digit-by-digit auto-fill as soon as WhatsScale confirms delivery!
+    setOtpDelivered(true);
   };
 
   const handleSubmit = async (e) => {
