@@ -20,6 +20,8 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
   const [showIntro, setShowIntro] = useState(!initialData);
   // 2 Stages: 'form' -> 'whatsapp_otp'
   const [step, setStep] = useState('form');
+  // Mobile-only (< md) 2-page split so each page fits on 1 mobile screen without scrolling
+  const [mobileFormPage, setMobileFormPage] = useState(1);
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -87,6 +89,39 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
       return 'Please enter a valid website URL (e.g. yourwebsite.com)';
     }
     return '';
+  };
+
+  const validateMobileStep1 = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      newErrors.name = 'Please enter your full name';
+    }
+
+    if (!formData.designation) {
+      newErrors.designation = 'Select your designation';
+    } else if (formData.designation === 'Others' && !formData.customDesignation.trim()) {
+      newErrors.customDesignation = 'Please specify your designation';
+    }
+
+    if (!formData.businessName.trim() || formData.businessName.trim().length < 2) {
+      newErrors.businessName = 'Please enter your company name';
+    }
+
+    if (!formData.businessType) {
+      newErrors.businessType = 'Select your business type';
+    } else if (formData.businessType === 'Others' && !formData.customBusinessType.trim()) {
+      newErrors.customBusinessType = 'Please specify your business type';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleMobileNext = () => {
+    if (validateMobileStep1()) {
+      setMobileFormPage(2);
+    }
   };
 
   const validateForm = () => {
@@ -400,32 +435,55 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
             transition={{ duration: 0.4, ease: 'easeOut' }}
             className="w-full"
           >
-            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="mb-3.5 sm:mb-6 flex items-center justify-between gap-3 sm:gap-4">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+                <h1 className="text-xl sm:text-3xl font-semibold text-white tracking-tight leading-snug">
                   Let&apos;s start our{' '}
                   <span className="text-[#d39c12]">conversation</span>
                 </h1>
-                <p className="text-xs sm:text-sm text-neutral-400 mt-1">
+                <p className="text-[11.5px] sm:text-sm text-neutral-400 mt-0.5 sm:mt-1">
                   Before we connect with Ram K7 in the chat, please share a few quick details below.
                 </p>
               </div>
               <img
                 src="./logo.png"
                 alt="Reach Skyline"
-                className="h-12 w-auto object-contain self-start sm:self-auto shrink-0"
+                className="h-10 sm:h-12 w-auto object-contain shrink-0"
               />
             </div>
 
             <form
               onSubmit={handleSubmit}
-              className="rounded-xl bg-[#0c0c0c] border border-[#d39c12]/35 p-6 sm:p-8 shadow-[0_0_40px_-15px_rgba(211,156,18,0.2)]"
+              className="rounded-xl bg-[#0c0c0c] border border-[#d39c12]/35 p-4 sm:p-8 shadow-[0_0_40px_-15px_rgba(211,156,18,0.2)]"
             >
-              {/* Two-Column Split Layout */}
+              {/* Mobile-Only (< md) Step Progress Indicator */}
+              <div className="md:hidden mb-3.5">
+                <div className="flex items-center justify-between text-[11px] font-medium mb-1.5">
+                  <span className="text-[#d39c12] font-semibold">
+                    {mobileFormPage === 1 ? 'Step 1 of 2 • Your Business' : 'Step 2 of 2 • Contact Details'}
+                  </span>
+                  <span className="text-neutral-400">{mobileFormPage} / 2</span>
+                </div>
+                <div className="w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-[#d39c12] transition-all duration-300 rounded-full ${
+                      mobileFormPage === 1 ? 'w-1/2' : 'w-full'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Two-Column Split Layout on Desktop | 2-Step Non-Scrolling Pages on Mobile */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {/* LEFT SIDE: Name, Designation, Company Name, Business Type */}
-                <div className="space-y-4">
+                {/* LEFT SIDE (Mobile Page 1): Name, Designation, Company Name, Business Type */}
+                <div
+                  className={
+                    mobileFormPage === 1
+                      ? 'space-y-3 md:space-y-4 block'
+                      : 'hidden md:block md:space-y-4'
+                  }
+                >
                   {/* Name */}
                   <div>
                     <label className="block text-xs text-neutral-300 mb-1.5">
@@ -523,8 +581,14 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                   </div>
                 </div>
 
-                {/* RIGHT SIDE: Phone, Email, Website (Required with 360° note), Location & Social Link (Optional) */}
-                <div className="space-y-4">
+                {/* RIGHT SIDE (Mobile Page 2): Phone, Email, Website (Required with 360° note), Location & Social Link (Optional) */}
+                <div
+                  className={
+                    mobileFormPage === 2
+                      ? 'space-y-3 md:space-y-4 block'
+                      : 'hidden md:block md:space-y-4'
+                  }
+                >
                   {/* Phone */}
                   <div>
                     <label className="block text-xs text-neutral-300 mb-1.5">
@@ -594,7 +658,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                   </div>
 
                   {/* Location (Optional) & Social Link (Optional) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                     <div>
                       <label className="block text-xs text-neutral-300 mb-1.5">
                         Location <span className="text-neutral-500">(Optional)</span>
@@ -625,15 +689,48 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
               </div>
 
               {otpError && step === 'form' && (
-                <p className="text-xs text-rose-400 mt-4">{otpError}</p>
+                <p className="text-xs text-rose-400 mt-3">{otpError}</p>
               )}
 
-              {/* Submit Button */}
-              <div className="mt-7 pt-5 border-t border-[#d39c12]/20 flex justify-end">
+              {/* MOBILE ONLY (< md): Step 1 "Next" button, Step 2 "Back" + "Continue" buttons */}
+              <div className="md:hidden mt-5 pt-4 border-t border-[#d39c12]/20">
+                {mobileFormPage === 1 ? (
+                  <button
+                    type="button"
+                    onClick={handleMobileNext}
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] text-black font-semibold text-sm transition cursor-pointer"
+                  >
+                    <span>Next</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setMobileFormPage(1)}
+                      className="px-4 py-2.5 rounded-lg bg-[#181818] border border-neutral-700 text-neutral-300 font-medium text-sm inline-flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Back</span>
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSendingOtp}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-50 text-black font-semibold text-sm transition cursor-pointer"
+                    >
+                      <span>{isSendingOtp ? 'Sending OTP...' : 'Continue'}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* DESKTOP ONLY (md+): Single "Continue" Submit Button */}
+              <div className="hidden md:flex mt-7 pt-5 border-t border-[#d39c12]/20 justify-end">
                 <button
                   type="submit"
                   disabled={isSendingOtp}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-50 text-black font-semibold text-sm transition cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-50 text-black font-semibold text-sm transition cursor-pointer"
                 >
                   <span>{isSendingOtp ? 'Sending WhatsApp OTP...' : 'Continue'}</span>
                   <ArrowRight className="w-4 h-4" />
