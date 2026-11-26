@@ -57,7 +57,7 @@ export default function SearchableDropdown({
           }
           setIsOpen((prev) => !prev);
         }}
-        className={`w-full px-3.5 py-2.5 rounded-lg bg-black border text-left text-sm flex items-center justify-between gap-2 transition cursor-pointer ${
+        className={`w-full px-4 md:px-3.5 py-3.5 md:py-2.5 rounded-xl md:rounded-lg bg-black border text-left text-[15px] md:text-sm flex items-center justify-between gap-2 transition cursor-pointer ${
           isOpen
             ? 'border-[#d39c12] ring-1 ring-[#d39c12]/40'
             : 'border-[#d39c12]/35 hover:border-[#d39c12]/70'

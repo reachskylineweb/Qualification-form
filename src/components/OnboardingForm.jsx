@@ -449,10 +449,10 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
   };
 
   const inputClass =
-    'w-full px-3.5 py-2.5 rounded-lg bg-black border border-[#d39c12]/35 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#d39c12] focus:ring-1 focus:ring-[#d39c12]/40 transition';
+    'w-full px-4 md:px-3.5 py-3.5 md:py-2.5 rounded-xl md:rounded-lg bg-black border border-[#d39c12]/35 text-white placeholder-neutral-500 text-[15px] md:text-sm focus:outline-none focus:border-[#d39c12] focus:ring-1 focus:ring-[#d39c12]/40 transition';
 
   return (
-    <div className="w-full max-w-3xl mx-auto min-h-[500px] flex items-center justify-center">
+    <div className="w-full max-w-3xl mx-auto flex-1 flex flex-col justify-center md:min-h-[500px] md:items-center">
       <AnimatePresence mode="wait">
         {showIntro ? (
           <motion.div
@@ -483,57 +483,61 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="w-full"
+            className="w-full flex-1 md:flex-initial flex flex-col justify-between"
           >
-            <div className="mb-3.5 sm:mb-6 flex items-center justify-between gap-3 sm:gap-4">
-              <div>
-                <h1 className="text-xl sm:text-3xl font-semibold text-white tracking-tight leading-snug">
+            <div className="mb-4 sm:mb-6 pt-1 sm:pt-0 flex items-center justify-between gap-3 sm:gap-4">
+              <div className="space-y-1">
+                <span className="md:hidden inline-block px-2.5 py-0.5 rounded-full bg-[#d39c12]/15 border border-[#d39c12]/35 text-[#d39c12] text-[10px] font-bold uppercase tracking-wider">
+                  1-on-1 Discovery Session
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight leading-snug">
                   Let&apos;s start our{' '}
                   <span className="text-[#d39c12]">conversation</span>
                 </h1>
-                <p className="text-[11.5px] sm:text-sm text-neutral-400 mt-0.5 sm:mt-1">
+                <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
                   Before we connect with Ram K7 in the chat, please share a few quick details below.
                 </p>
               </div>
               <img
                 src="./logo.png"
                 alt="Reach Skyline"
-                className="h-10 sm:h-12 w-auto object-contain shrink-0"
+                className="h-12 sm:h-12 w-auto object-contain shrink-0"
               />
             </div>
 
             <form
               onSubmit={handleSubmit}
-              className="rounded-xl bg-[#0c0c0c] border border-[#d39c12]/35 p-4 sm:p-8 shadow-[0_0_40px_-15px_rgba(211,156,18,0.2)]"
+              className="flex-1 md:flex-initial flex flex-col justify-between rounded-2xl md:rounded-xl bg-[#0c0c0c] border border-[#d39c12]/35 p-5 sm:p-8 shadow-[0_0_40px_-15px_rgba(211,156,18,0.2)]"
             >
-              {/* Mobile-Only (< md) Step Progress Indicator */}
-              <div className="md:hidden mb-3.5">
-                <div className="flex items-center justify-between text-[11px] font-medium mb-1.5">
-                  <span className="text-[#d39c12] font-semibold">
-                    {mobileFormPage === 1 ? 'Step 1 of 2 • Your Business' : 'Step 2 of 2 • Contact Details'}
-                  </span>
-                  <span className="text-neutral-400">{mobileFormPage} / 2</span>
+              <div>
+                {/* Mobile-Only (< md) Step Progress Indicator */}
+                <div className="md:hidden mb-5">
+                  <div className="flex items-center justify-between text-xs font-medium mb-2">
+                    <span className="text-[#d39c12] font-semibold">
+                      {mobileFormPage === 1 ? 'Step 1 of 2 • Your Business' : 'Step 2 of 2 • Contact Details'}
+                    </span>
+                    <span className="text-neutral-400">{mobileFormPage} / 2</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full bg-[#d39c12] transition-all duration-300 rounded-full ${
+                        mobileFormPage === 1 ? 'w-1/2' : 'w-full'
+                      }`}
+                    />
+                  </div>
                 </div>
-                <div className="w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+
+                {/* Two-Column Split Layout on Desktop | 2-Step Non-Scrolling Pages on Mobile */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                  {/* LEFT SIDE (Mobile Page 1): Name, Designation, Company Name, Business Type */}
                   <div
-                    className={`h-full bg-[#d39c12] transition-all duration-300 rounded-full ${
-                      mobileFormPage === 1 ? 'w-1/2' : 'w-full'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Two-Column Split Layout on Desktop | 2-Step Non-Scrolling Pages on Mobile */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                {/* LEFT SIDE (Mobile Page 1): Name, Designation, Company Name, Business Type */}
-                <div
-                  className={
-                    mobileFormPage === 1
-                      ? 'space-y-3 md:space-y-4 block'
-                      : 'hidden md:block md:space-y-4'
-                  }
-                >
+                    className={
+                      mobileFormPage === 1
+                        ? 'space-y-4 md:space-y-4 block'
+                        : 'hidden md:block md:space-y-4'
+                    }
+                  >
                   {/* Name */}
                   <div>
                     <label className="block text-xs text-neutral-300 mb-1.5">
@@ -737,18 +741,19 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                   </div>
                 </div>
               </div>
+              </div>
 
               {otpError && step === 'form' && (
                 <p className="text-xs text-rose-400 mt-3">{otpError}</p>
               )}
 
               {/* MOBILE ONLY (< md): Step 1 "Next" button, Step 2 "Back" + "Continue" buttons */}
-              <div className="md:hidden mt-5 pt-4 border-t border-[#d39c12]/20">
+              <div className="md:hidden mt-6 pt-4 border-t border-[#d39c12]/20 space-y-2.5">
                 {mobileFormPage === 1 ? (
                   <button
                     type="button"
                     onClick={handleMobileNext}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] text-black font-semibold text-sm transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] text-black font-bold text-[15px] transition cursor-pointer"
                   >
                     <span>Next</span>
                     <ArrowRight className="w-4 h-4" />
@@ -758,7 +763,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                     <button
                       type="button"
                       onClick={() => setMobileFormPage(1)}
-                      className="px-4 py-2.5 rounded-lg bg-[#181818] border border-neutral-700 text-neutral-300 font-medium text-sm inline-flex items-center justify-center gap-1.5 transition cursor-pointer"
+                      className="px-4 py-3.5 rounded-xl bg-[#181818] border border-neutral-700 text-neutral-300 font-medium text-[15px] inline-flex items-center justify-center gap-1.5 transition cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       <span>Back</span>
@@ -766,13 +771,16 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                     <button
                       type="submit"
                       disabled={isSendingOtp}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-50 text-black font-semibold text-sm transition cursor-pointer"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-50 text-black font-bold text-[15px] transition cursor-pointer"
                     >
                       <span>{isSendingOtp ? 'Sending OTP...' : 'Continue'}</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 )}
+                <p className="text-[11px] text-neutral-500 text-center">
+                  Your details are kept confidential for your 1-on-1 discovery session.
+                </p>
               </div>
 
               {/* DESKTOP ONLY (md+): Single "Continue" Submit Button */}

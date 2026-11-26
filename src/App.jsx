@@ -112,7 +112,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-black text-slate-100 flex flex-col justify-center relative">
+    <div className="min-h-[100dvh] bg-black text-slate-100 flex flex-col justify-start md:justify-center relative">
       <AnimatePresence mode="wait">
         {stage === 'onboarding' ? (
           <motion.main
@@ -121,7 +121,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="w-full max-w-4xl mx-auto px-3.5 sm:px-6 py-6 sm:py-12"
+            className="w-full max-w-4xl mx-auto px-3.5 sm:px-6 py-4 sm:py-12 min-h-[100dvh] md:min-h-0 flex flex-col"
           >
             <OnboardingForm
               initialData={profileData}
