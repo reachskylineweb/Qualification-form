@@ -25,11 +25,7 @@ export default function SearchableDropdown({
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 50);
-    } else {
+    if (!isOpen) {
       setSearchQuery('');
     }
   }, [isOpen]);
@@ -55,7 +51,12 @@ export default function SearchableDropdown({
       {/* Trigger Button */}
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => {
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+          setIsOpen((prev) => !prev);
+        }}
         className={`w-full px-3.5 py-2.5 rounded-lg bg-black border text-left text-sm flex items-center justify-between gap-2 transition cursor-pointer ${
           isOpen
             ? 'border-[#d39c12] ring-1 ring-[#d39c12]/40'
