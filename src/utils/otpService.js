@@ -70,7 +70,7 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
       // Ensure PHP file wasn't returned as raw text on non-PHP static servers
       if (res.ok && !contentType.includes('application/x-httpd-php')) {
         const text = await res.text();
-        if (!text.trim().startsWith('<?php')) {
+        if (!text.trim().startsWith('<?php') && text.trim().length > 0) {
           return { ok: true, status: res.status };
         }
       }
@@ -79,24 +79,7 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
     }
   }
 
-  // 2. Fallback: Relay through Google Apps Script if deployed on static hosting
-  try {
-    await fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        action: 'SEND_WHATSAPP_OTP',
-        phone: formattedPhone,
-        name,
-        otp,
-      }),
-    });
-    return { ok: true };
-  } catch (err) {
-    console.error('WhatsScale send error:', err);
-    return { ok: false, error: err };
-  }
+  return { ok: false, error: 'WhatsApp OTP delivery failed' };
 }
 
 /**

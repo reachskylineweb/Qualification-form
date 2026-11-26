@@ -267,7 +267,31 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     return () => window.removeEventListener('storage', handleStorageSync);
   }, [generatedPhoneOtp]);
 
-  // Instant Auto-Submit as soon as all 6 digits are entered, tapped via WhatsApp magic link, or pasted
+  // Auto-Fetch & Digit-by-Digit Fill into the 6 OTP boxes AFTER WhatsApp message arrives (~3.8s)
+  useEffect(() => {
+    if (step !== 'whatsapp_otp' || !generatedPhoneOtp) return;
+
+    const digits = generatedPhoneOtp.split('');
+    const timers = [];
+
+    // Wait 3.8s so the WhatsApp OTP notification arrives on the user's phone first, then auto-fill 1-by-1
+    digits.forEach((d, idx) => {
+      const t = setTimeout(() => {
+        setPhoneDigits((prev) => {
+          const next = [...prev];
+          next[idx] = d;
+          return next;
+        });
+      }, 3800 + idx * 120);
+      timers.push(t);
+    });
+
+    return () => {
+      timers.forEach((t) => clearTimeout(t));
+    };
+  }, [step, generatedPhoneOtp]);
+
+  // Instant Auto-Submit as soon as all 6 digits are entered, auto-filled, or pasted
   useEffect(() => {
     if (step !== 'whatsapp_otp' || !generatedPhoneOtp) return;
     const enteredPhone = phoneDigits.join('');
@@ -276,7 +300,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
         setOtpError('');
         const timer = setTimeout(() => {
           finalizeAndEnterChat(formData);
-        }, 300);
+        }, 450);
         return () => clearTimeout(timer);
       } else {
         setOtpError('Invalid WhatsApp OTP. Please check your WhatsApp and try again.');
@@ -794,16 +818,19 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                   Enter the 6-digit OTP sent to your WhatsApp number{' '}
                   <span className="text-[#d39c12] font-medium">{formData.phone}</span>
                 </p>
-                {phoneDigits.join('') === generatedPhoneOtp && generatedPhoneOtp ? (
-                  <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] text-xs font-medium">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>OTP Verified! Entering chat...</span>
-                  </div>
-                ) : (
-                  <p className="text-[11px] text-[#25D366]/90 mt-2">
-                    Tip: Tap the 1-click verify link in your WhatsApp message or enter the 6-digit code below.
-                  </p>
-                )}
+                <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] text-xs font-medium">
+                  {phoneDigits.join('') === generatedPhoneOtp && generatedPhoneOtp ? (
+                    <>
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>OTP Auto-Fetched & Verified! Entering chat...</span>
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Waiting for WhatsApp delivery & auto-fetching OTP...</span>
+                    </>
+                  )}
+                </div>
               </div>
 
               <form onSubmit={handleVerifyWhatsAppOtp} className="space-y-5">
