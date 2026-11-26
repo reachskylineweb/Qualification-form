@@ -6,8 +6,25 @@ import {
   CheckCheck,
   Send,
   Calendar,
+  MoreVertical,
 } from 'lucide-react';
 import { syncLeadData } from '../utils/leadSync';
+
+const MOBILE_STEP_TITLES = {
+  revenue_today: 'Select your current monthly revenue',
+  team_size: 'Select your current team size',
+  market_size: 'Select your current market reach',
+  profitability: 'Select your current profitability',
+  future_revenue: 'Select your revenue growth target',
+  future_timeline: 'Select your target timeline',
+  has_strategy: 'Do you have a clear strategy in place?',
+  marketing_spend: 'Select your monthly marketing spend',
+  marketing_leads: 'Select your monthly enquiries volume',
+  marketing_conversion: 'Select your conversion rate & ROI',
+  funnel_automated: 'Is your sales process automated?',
+  capabilities_interest: 'Select areas most important to you',
+  appointment_preference: 'Select your booking preference',
+};
 
 const formatTime = () => {
   const now = new Date();
@@ -478,6 +495,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
   const [answers, setAnswers] = useState({});
 
   const [selectedCapabilities, setSelectedCapabilities] = useState([]);
+  const [activeMobileOption, setActiveMobileOption] = useState(null);
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [appointmentRequested, setAppointmentRequested] = useState(false);
@@ -617,10 +635,14 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
 
   const handleSingleSelect = (option) => {
     if (isTyping || isCompleted) return;
+    setActiveMobileOption(option.value);
     const step = steps[currentStepIdx];
     const updated = { ...answers, [step.id]: option.value };
     setAnswers(updated);
-    advanceWithHumanReply(updated, option.label, option.reaction);
+    setTimeout(() => {
+      setActiveMobileOption(null);
+      advanceWithHumanReply(updated, option.label, option.reaction);
+    }, 180);
   };
 
   const toggleCapability = (val) => {
@@ -648,15 +670,15 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
 
   return (
     <div className="w-full h-full flex-1 flex flex-col">
-      {/* Full-Page Edge-to-Edge Gold & Black WhatsApp Chatbot Container */}
-      <div className="w-full flex-1 overflow-hidden bg-[#090909] flex flex-col">
+      {/* Mobile (< sm): Minimal & Clean Light UI | Desktop (sm+): Edge-to-Edge Gold & Black WhatsApp Chatbot */}
+      <div className="w-full flex-1 overflow-hidden bg-[#f4f5f7] sm:bg-[#090909] flex flex-col">
         
         {/* Top Messenger Header */}
-        <div className="bg-[#141414] px-4 sm:px-8 py-3.5 flex items-center justify-between border-b border-[#d39c12]/25 shrink-0">
-          <div className="flex items-center gap-3.5">
+        <div className="bg-white sm:bg-[#141414] px-4 sm:px-8 py-3 sm:py-3.5 flex items-center justify-between border-b border-neutral-200/80 sm:border-[#d39c12]/25 shadow-[0_1px_3px_rgba(0,0,0,0.03)] sm:shadow-none shrink-0">
+          <div className="flex items-center gap-3 sm:gap-3.5">
             <button
               onClick={onBackToProfile}
-              className="p-2 -ml-1 rounded-full text-neutral-300 hover:bg-white/10 transition cursor-pointer"
+              className="p-2 -ml-1 rounded-full text-neutral-800 sm:text-neutral-300 hover:bg-neutral-100 sm:hover:bg-white/10 transition cursor-pointer"
               title="Back to details"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -671,47 +693,44 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   className="w-full h-full object-contain object-top"
                 />
               </div>
-              <span className="w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-[#141414] absolute bottom-0 right-0" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white sm:ring-[#141414] absolute bottom-0 right-0" />
             </div>
 
             <div>
-              <h2 className="text-base font-semibold text-white leading-tight flex items-center gap-2">
+              <h2 className="text-[17px] sm:text-base font-bold sm:font-semibold text-neutral-900 sm:text-white leading-tight flex items-center gap-2">
                 <span>Reach Skyline</span>
               </h2>
-              <div className="mt-1 flex items-center gap-1.5">
+              <div className="mt-0.5 sm:mt-1 flex items-center gap-1.5">
                 {isTyping ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-[#d39c12] tracking-wide">
+                    <span className="text-xs font-semibold text-[#b88208] sm:text-[#d39c12] tracking-wide">
                       typing
                     </span>
                     <div className="flex items-center gap-1 pt-0.5">
-                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
-                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
-                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
-                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
+                      <span className="typing-wave-dot w-1.5 h-1.5 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
                     </div>
                   </div>
                 ) : (
-                  <span className="text-xs text-neutral-400">Online</span>
+                  <span className="text-xs text-neutral-500 sm:text-neutral-400">Online</span>
                 )}
               </div>
             </div>
           </div>
+
+          {/* Mobile 3-dots menu icon matching Option 3 - Minimal & Clean */}
+          <div className="sm:hidden p-1.5 text-neutral-700">
+            <MoreVertical className="w-5 h-5" />
+          </div>
         </div>
 
-        {/* WhatsApp Style Chat Area with Standing Ram Inside the Chat Flow */}
-        <div
-          className="no-scrollbar flex-1 overflow-y-auto px-3 sm:px-10 py-4 sm:py-6 space-y-4 sm:space-y-5"
-          style={{
-            backgroundColor: '#080808',
-            backgroundImage: `radial-gradient(rgba(211, 156, 18, 0.12) 1px, transparent 0)`,
-            backgroundSize: '24px 24px',
-          }}
-        >
-          {/* Chat Bubbles with Standing Human Figure Inside Chat */}
+        {/* Chat Stream Area */}
+        <div className="chat-stream-bg no-scrollbar flex-1 overflow-y-auto px-3.5 sm:px-10 py-4 sm:py-6 space-y-3.5 sm:space-y-5">
+          {/* Chat Bubbles */}
           {chatHistory.map((item, idx) => {
             const isUser = item.sender === 'user';
-            // Show Ram's standing figure on the first message of a bot group
             const prevItem = idx > 0 ? chatHistory[idx - 1] : null;
             const showStandingRam = !isUser && (!prevItem || prevItem.sender === 'user');
 
@@ -721,75 +740,106 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                 initial={{ opacity: 0, y: 8, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.18 }}
-                className={`flex items-end gap-2 sm:gap-3.5 ${
+                className={`flex items-center sm:items-end gap-2.5 sm:gap-3.5 ${
                   isUser ? 'justify-end' : 'justify-start'
                 }`}
               >
                 {!isUser && (
-                  <div className="w-14 sm:w-28 shrink-0 flex flex-col items-center">
-                    {showStandingRam ? (
-                      <img
-                        src={RAM_SIR_AVATAR}
-                        alt="Ram"
-                        className="w-14 sm:w-28 h-auto object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
-                      />
-                    ) : (
-                      <div className="w-14 sm:w-28" />
-                    )}
-                  </div>
+                  <>
+                    {/* MOBILE ONLY (< sm): Circular Portrait Avatar next to first bubble */}
+                    <div className="w-12 shrink-0 flex items-center justify-center sm:hidden">
+                      {showStandingRam ? (
+                        <div className="w-12 h-12 rounded-full bg-[#e4e6eb] border border-neutral-300/70 shadow-sm overflow-hidden flex items-start justify-center">
+                          <img
+                            src={RAM_SIR_AVATAR}
+                            alt="Ram"
+                            className="w-11 h-14 object-cover object-top mt-0.5"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-12" />
+                      )}
+                    </div>
+
+                    {/* DESKTOP ONLY (sm+): Full Standing Ram Cutout */}
+                    <div className="hidden sm:flex sm:w-28 shrink-0 flex-col items-center">
+                      {showStandingRam ? (
+                        <img
+                          src={RAM_SIR_AVATAR}
+                          alt="Ram"
+                          className="w-28 h-auto object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+                        />
+                      ) : (
+                        <div className="w-28" />
+                      )}
+                    </div>
+                  </>
                 )}
 
                 <div
-                  className={`relative max-w-[80%] sm:max-w-[65%] px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-[13.5px] sm:text-[15px] leading-relaxed shadow-sm ${
+                  className={`relative max-w-[82%] sm:max-w-[65%] px-4 py-3 rounded-2xl text-[14.5px] sm:text-[15px] leading-[1.45] sm:leading-relaxed ${
                     isUser
-                      ? 'bg-[#d39c12] text-black font-medium rounded-tr-none'
-                      : 'bg-[#171717] text-neutral-100 border border-[#d39c12]/25 rounded-bl-none'
+                      ? 'bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tr-sm shadow-sm sm:bg-[#d39c12] sm:text-black sm:font-medium sm:border-transparent sm:rounded-tr-none'
+                      : 'bg-white text-neutral-900 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:bg-[#171717] sm:text-neutral-100 sm:border-[#d39c12]/25 sm:rounded-bl-none sm:shadow-sm'
                   }`}
                 >
                   {showStandingRam && (
-                    <span className="block text-[11px] font-semibold text-[#d39c12] mb-1">
+                    <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#fef4d1] text-[#b47b05] text-[12px] font-bold mb-1.5 sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-[11px] sm:font-semibold sm:text-[#d39c12] sm:mb-1">
                       Ram • Reach Skyline
                     </span>
                   )}
-                  <p className="whitespace-pre-line pr-12 sm:pr-14">{item.text}</p>
-                  <div className="flex items-center justify-end gap-1 mt-1 -mb-0.5 float-right">
+                  <p className="whitespace-pre-line pr-0 sm:pr-14">{item.text}</p>
+                  <div className="flex items-center justify-end gap-1 mt-1 -mb-0.5 sm:float-right">
                     <span
-                      className={`text-[10px] sm:text-[11px] ${
-                        isUser ? 'text-black/70' : 'text-neutral-400'
+                      className={`text-[11px] ${
+                        isUser
+                          ? 'text-neutral-600 sm:text-black/70'
+                          : 'text-neutral-400'
                       }`}
                     >
                       {item.time}
                     </span>
-                    {isUser && <CheckCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black/80" />}
+                    {isUser && (
+                      <CheckCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#b47b05] sm:text-black/80" />
+                    )}
                   </div>
                 </div>
               </motion.div>
             );
           })}
 
-          {/* Typing & Dotted Wave Indicator with Standing Ram Cutout */}
+          {/* Typing & Dotted Wave Indicator */}
           {isTyping && (
-            <div className="flex items-end gap-2 sm:gap-3.5 justify-start">
+            <div className="flex items-center sm:items-end gap-2.5 sm:gap-3.5 justify-start">
+              {/* Mobile Circular Avatar */}
+              <div className="w-12 h-12 rounded-full bg-[#e4e6eb] border border-neutral-300/70 shadow-sm overflow-hidden flex items-start justify-center shrink-0 sm:hidden">
+                <img
+                  src={RAM_SIR_AVATAR}
+                  alt="Ram"
+                  className="w-11 h-14 object-cover object-top mt-0.5"
+                />
+              </div>
+              {/* Desktop Full Cutout */}
               <img
                 src={RAM_SIR_AVATAR}
                 alt="Ram"
-                className="w-14 sm:w-28 h-auto object-contain shrink-0 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+                className="hidden sm:block sm:w-28 h-auto object-contain shrink-0 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
               />
-              <div className="bg-[#171717] border border-[#d39c12]/50 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl rounded-bl-none shadow-md flex items-center gap-2.5">
-                <span className="text-xs sm:text-sm font-semibold text-[#d39c12] tracking-wide">
+              <div className="bg-white sm:bg-[#171717] border border-neutral-200 sm:border-[#d39c12]/50 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-bl-none shadow-sm sm:shadow-md flex items-center gap-2.5">
+                <span className="text-xs sm:text-sm font-semibold text-[#b47b05] sm:text-[#d39c12] tracking-wide">
                   typing
                 </span>
                 <div className="flex items-center gap-1.5 pt-0.5">
-                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
-                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
-                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
-                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
+                  <span className="typing-wave-dot w-2 h-2 rounded-full bg-[#c89116] sm:bg-[#d39c12]" />
                 </div>
               </div>
             </div>
           )}
 
-          {/* Final Schedule Appointment Button inside Chat (Only if user chose "Book by myself", locks after 1 click so they cannot book more than once) */}
+          {/* Final Schedule Appointment Button inside Chat */}
           {isCompleted && answers.appointment_preference === 'Book by myself' && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -797,18 +847,18 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
               className="pt-2 sm:pt-3 pl-0 sm:pl-28 max-w-md"
             >
               {!appointmentRequested ? (
-                <div className="bg-[#141414] border border-[#d39c12]/60 rounded-xl p-4 sm:p-5 space-y-3">
+                <div className="bg-white sm:bg-[#141414] border border-[#d39c12]/60 rounded-2xl sm:rounded-xl p-4 sm:p-5 shadow-md sm:shadow-none space-y-3">
                   <button
                     type="button"
                     onClick={handleBookHereClick}
-                    className="w-full py-3 px-4 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] active:scale-[0.99] text-black font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer"
+                    className="w-full py-3 px-4 rounded-xl sm:rounded-lg bg-[#d39c12] hover:bg-[#e5b126] active:scale-[0.99] text-black font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer"
                   >
                     <Calendar className="w-4 h-4 shrink-0" />
                     <span>Book Your Appointment Here</span>
                   </button>
                 </div>
               ) : (
-                <div className="bg-[#141414] border border-[#d39c12]/40 rounded-xl p-4 text-xs sm:text-sm text-[#d39c12] font-medium flex items-center gap-2">
+                <div className="bg-white sm:bg-[#141414] border border-[#d39c12]/50 rounded-2xl sm:rounded-xl p-4 text-xs sm:text-sm text-[#b47b05] sm:text-[#d39c12] font-semibold flex items-center gap-2 shadow-sm sm:shadow-none">
                   <Check className="w-4 h-4 shrink-0" />
                   <span>Appointment booking session opened (1 booking allowed per request).</span>
                 </div>
@@ -819,21 +869,122 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Quick Reply Options Tray at Bottom */}
+        {/* ================================================================= */}
+        {/* MOBILE ONLY (< sm): Option 3 – Minimal & Clean White Floating Card */}
+        {/* ================================================================= */}
         {!isTyping && !isCompleted && currentStep && (
-          <div className="bg-[#141414] border-t border-[#d39c12]/25 px-3 sm:px-8 py-3 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] shrink-0">
-            <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-neutral-400 mb-2">
+          <div className="sm:hidden px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-1 bg-[#f4f5f7] shrink-0">
+            <div className="bg-white rounded-2xl border border-neutral-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.06)] p-4">
+              {/* Card Title with Gold Bar Chart Icon */}
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="flex items-end gap-[2.5px] h-4 shrink-0">
+                  <span className="w-[3.5px] h-2 bg-[#c89116] rounded-t-xs" />
+                  <span className="w-[3.5px] h-4 bg-[#c89116] rounded-t-xs" />
+                  <span className="w-[3.5px] h-3 bg-[#c89116] rounded-t-xs" />
+                </div>
+                <h3 className="text-[14.5px] font-bold text-neutral-900 leading-snug">
+                  {MOBILE_STEP_TITLES[currentStep.id] || 'Select an option below'}
+                </h3>
+              </div>
+
+              {currentStep.type === 'single' && (
+                <div className="space-y-2 max-h-[36vh] overflow-y-auto no-scrollbar">
+                  {currentStepOptions.map((opt) => {
+                    const isSelected = activeMobileOption === opt.value;
+                    return (
+                      <button
+                        type="button"
+                        key={opt.value}
+                        onClick={() => handleSingleSelect(opt)}
+                        className={`w-full px-3.5 py-2.5 rounded-xl border text-left text-[14px] transition flex items-center gap-3 cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#fdf0c2] border-[#ebd074] text-neutral-950 font-semibold'
+                            : 'bg-white border-neutral-300 text-neutral-900 font-medium active:bg-[#fdf0c2] active:border-[#ebd074]'
+                        }`}
+                      >
+                        {/* Radio Circle matching Option 3 - Minimal & Clean */}
+                        <span
+                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 transition ${
+                            isSelected
+                              ? 'border-2 border-[#b47b05] bg-white'
+                              : 'border-[1.5px] border-[#b48a2c]/70 bg-white'
+                          }`}
+                        >
+                          {isSelected && (
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#b47b05]" />
+                          )}
+                        </span>
+                        <span className="leading-snug">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {currentStep.type === 'multi' && (
+                <div className="space-y-3">
+                  <div className="space-y-2 max-h-[32vh] overflow-y-auto no-scrollbar">
+                    {currentStepOptions.map((opt) => {
+                      const isSelected = selectedCapabilities.includes(opt.value);
+                      return (
+                        <button
+                          type="button"
+                          key={opt.value}
+                          onClick={() => toggleCapability(opt.value)}
+                          className={`w-full px-3.5 py-2.5 rounded-xl border text-left text-[14px] transition flex items-center gap-3 cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#fdf0c2] border-[#ebd074] text-neutral-950 font-semibold'
+                              : 'bg-white border-neutral-300 text-neutral-900 font-medium'
+                          }`}
+                        >
+                          <span
+                            className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 transition ${
+                              isSelected
+                                ? 'border-2 border-[#b47b05] bg-white'
+                                : 'border-[1.5px] border-[#b48a2c]/70 bg-white'
+                            }`}
+                          >
+                            {isSelected && (
+                              <span className="w-2.5 h-2.5 rounded-full bg-[#b47b05]" />
+                            )}
+                          </span>
+                          <span className="leading-snug">{opt.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    type="button"
+                    disabled={selectedCapabilities.length === 0}
+                    onClick={handleMultiSubmit}
+                    className="w-full py-2.5 px-5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer"
+                  >
+                    <span>Send Selected ({selectedCapabilities.length})</span>
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ================================================================= */}
+        {/* DESKTOP ONLY (sm+): Original Gold & Black Quick Reply Options Tray */}
+        {/* ================================================================= */}
+        {!isTyping && !isCompleted && currentStep && (
+          <div className="hidden sm:block bg-[#141414] border-t border-[#d39c12]/25 px-8 py-4 shrink-0">
+            <p className="text-[11px] uppercase tracking-wider text-neutral-400 mb-2">
               {currentStep.type === 'multi'
                 ? 'Select one or more options below:'
                 : 'Tap an option below to reply:'}
             </p>
             {currentStep.type === 'single' && (
-              <div className="flex flex-wrap gap-1.5 sm:gap-2.5 max-h-40 sm:max-h-44 overflow-y-auto no-scrollbar">
+              <div className="flex flex-wrap gap-2.5 max-h-44 overflow-y-auto no-scrollbar">
                 {currentStepOptions.map((opt) => (
                   <button
                     key={opt.value}
                     onClick={() => handleSingleSelect(opt)}
-                    className="text-left text-xs sm:text-sm px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-full bg-[#1f1f1f] hover:bg-[#d39c12] active:bg-[#d39c12] text-neutral-200 hover:text-black active:text-black font-medium border border-[#d39c12]/40 transition cursor-pointer"
+                    className="text-left text-sm px-4 py-2.5 rounded-full bg-[#1f1f1f] hover:bg-[#d39c12] active:bg-[#d39c12] text-neutral-200 hover:text-black active:text-black font-medium border border-[#d39c12]/40 transition cursor-pointer"
                   >
                     {opt.label}
                   </button>
@@ -842,8 +993,8 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
             )}
 
             {currentStep.type === 'multi' && (
-              <div className="space-y-2.5 sm:space-y-3">
-                <div className="flex flex-wrap gap-1.5 sm:gap-2.5 max-h-40 overflow-y-auto no-scrollbar">
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2.5 max-h-40 overflow-y-auto no-scrollbar">
                   {currentStepOptions.map((opt) => {
                     const isSelected = selectedCapabilities.includes(opt.value);
                     return (
@@ -851,14 +1002,14 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                         type="button"
                         key={opt.value}
                         onClick={() => toggleCapability(opt.value)}
-                        className={`text-left text-xs sm:text-sm px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-full border transition flex items-center gap-2 cursor-pointer ${
+                        className={`text-left text-sm px-4 py-2.5 rounded-full border transition flex items-center gap-2 cursor-pointer ${
                           isSelected
                             ? 'bg-[#d39c12] text-black border-[#d39c12] font-semibold'
                             : 'bg-[#1f1f1f] text-neutral-300 border-[#d39c12]/30'
                         }`}
                       >
                         <Check
-                          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${
+                          className={`w-4 h-4 shrink-0 ${
                             isSelected ? 'text-black stroke-[3]' : 'opacity-40'
                           }`}
                         />
@@ -871,7 +1022,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   type="button"
                   disabled={selectedCapabilities.length === 0}
                   onClick={handleMultiSubmit}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-auto px-6 py-2.5 rounded-lg bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-sm font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <span>Send Selected ({selectedCapabilities.length})</span>
                   <Send className="w-4 h-4" />
