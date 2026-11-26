@@ -51,15 +51,9 @@
   animation-delay: 0.48s;
 }
 
-/* Mobile (< 640px): Minimal & Clean Light Background; Desktop (>= 640px): Dark Gold Radial Grid */
+/* Minimal & Clean Light Background with subtle warm gold micro-dots to eliminate flat empty whitespace */
 .chat-stream-bg {
   background-color: #f4f5f7;
-}
-
-@media (min-width: 640px) {
-  .chat-stream-bg {
-    background-color: #080808;
-    background-image: radial-gradient(rgba(211, 156, 18, 0.12) 1px, transparent 0);
-    background-size: 24px 24px;
-  }
+  background-image: radial-gradient(rgba(200, 145, 22, 0.11) 1px, transparent 0);
+  background-size: 22px 22px;
 }
