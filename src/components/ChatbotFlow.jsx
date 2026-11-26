@@ -740,24 +740,24 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                 initial={{ opacity: 0, y: 8, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.18 }}
-                className={`flex items-center sm:items-end gap-2.5 sm:gap-3.5 ${
+                className={`flex items-start sm:items-end gap-2 sm:gap-3.5 ${
                   isUser ? 'justify-end' : 'justify-start'
                 }`}
               >
                 {!isUser && (
                   <>
-                    {/* MOBILE ONLY (< sm): Circular Portrait Avatar next to first bubble */}
-                    <div className="w-12 shrink-0 flex items-center justify-center sm:hidden">
+                    {/* MOBILE ONLY (< sm): Compact Circular Portrait Avatar at Top-Left of Bubble */}
+                    <div className="w-9 shrink-0 flex items-start justify-center sm:hidden mt-0.5">
                       {showStandingRam ? (
-                        <div className="w-12 h-12 rounded-full bg-[#e4e6eb] border border-neutral-300/70 shadow-sm overflow-hidden flex items-start justify-center">
+                        <div className="w-9 h-9 rounded-full bg-[#e4e6eb] border border-neutral-300/80 shadow-sm overflow-hidden flex items-start justify-center">
                           <img
                             src={RAM_SIR_AVATAR}
                             alt="Ram"
-                            className="w-11 h-14 object-cover object-top mt-0.5"
+                            className="w-8 h-11 object-cover object-top mt-0.5"
                           />
                         </div>
                       ) : (
-                        <div className="w-12" />
+                        <div className="w-9" />
                       )}
                     </div>
 
@@ -777,10 +777,10 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                 )}
 
                 <div
-                  className={`relative max-w-[82%] sm:max-w-[65%] px-4 py-3 rounded-2xl text-[14.5px] sm:text-[15px] leading-[1.45] sm:leading-relaxed ${
+                  className={`relative px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-[14px] sm:text-[15px] leading-[1.45] sm:leading-relaxed ${
                     isUser
-                      ? 'bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tr-sm shadow-sm sm:bg-[#d39c12] sm:text-black sm:font-medium sm:border-transparent sm:rounded-tr-none'
-                      : 'bg-white text-neutral-900 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:bg-[#171717] sm:text-neutral-100 sm:border-[#d39c12]/25 sm:rounded-bl-none sm:shadow-sm'
+                      ? 'max-w-[78%] sm:max-w-[65%] bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tr-sm shadow-sm sm:bg-[#d39c12] sm:text-black sm:font-medium sm:border-transparent sm:rounded-tr-none'
+                      : 'max-w-[74%] sm:max-w-[65%] mr-auto bg-white text-neutral-900 border border-neutral-200/80 rounded-tl-sm shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:mr-0 sm:bg-[#171717] sm:text-neutral-100 sm:border-[#d39c12]/25 sm:rounded-tl-2xl sm:rounded-bl-none sm:shadow-sm'
                   }`}
                 >
                   {showStandingRam && (
@@ -810,13 +810,13 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
 
           {/* Typing & Dotted Wave Indicator */}
           {isTyping && (
-            <div className="flex items-center sm:items-end gap-2.5 sm:gap-3.5 justify-start">
+            <div className="flex items-start sm:items-end gap-2 sm:gap-3.5 justify-start">
               {/* Mobile Circular Avatar */}
-              <div className="w-12 h-12 rounded-full bg-[#e4e6eb] border border-neutral-300/70 shadow-sm overflow-hidden flex items-start justify-center shrink-0 sm:hidden">
+              <div className="w-9 h-9 rounded-full bg-[#e4e6eb] border border-neutral-300/80 shadow-sm overflow-hidden flex items-start justify-center shrink-0 sm:hidden mt-0.5">
                 <img
                   src={RAM_SIR_AVATAR}
                   alt="Ram"
-                  className="w-11 h-14 object-cover object-top mt-0.5"
+                  className="w-8 h-11 object-cover object-top mt-0.5"
                 />
               </div>
               {/* Desktop Full Cutout */}
