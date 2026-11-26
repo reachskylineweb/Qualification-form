@@ -132,6 +132,101 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     return Object.keys(newErrors).length === 0;
   };
 
+  // Helper to finalize profile & enter chat
+  const finalizeAndEnterChat = (dataToUse) => {
+    const targetData = dataToUse || formData;
+    const finalDesignation =
+      targetData.designation === 'Others'
+        ? (targetData.customDesignation || '').trim()
+        : targetData.designation;
+
+    const finalBusinessType =
+      targetData.businessType === 'Others'
+        ? (targetData.customBusinessType || '').trim()
+        : targetData.businessType;
+
+    try {
+      localStorage.removeItem('reachskyline_pending_otp');
+    } catch {
+      // ignore storage errors
+    }
+
+    onComplete({
+      ...targetData,
+      designation: finalDesignation,
+      businessType: finalBusinessType,
+      phoneVerified: true,
+    });
+  };
+
+  // 1-Tap Magic Link Auto-Verify (?otp=123456) on mount
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlOtp = (params.get('otp') || '').replace(/\D/g, '');
+      if (urlOtp.length === 6) {
+        const rawSaved = localStorage.getItem('reachskyline_pending_otp');
+        if (rawSaved) {
+          const parsed = JSON.parse(rawSaved);
+          if (parsed && parsed.otp === urlOtp && parsed.formData) {
+            // Clean URL query param
+            window.history.replaceState({}, '', window.location.pathname);
+            // Notify original open tab (if any) via localStorage event
+            localStorage.setItem(
+              'reachskyline_otp_verified_signal',
+              JSON.stringify({ otp: urlOtp, ts: Date.now() })
+            );
+            setShowIntro(false);
+            setFormData(parsed.formData);
+            setGeneratedPhoneOtp(urlOtp);
+            setPhoneDigits(urlOtp.split(''));
+            setStep('whatsapp_otp');
+            setTimeout(() => {
+              finalizeAndEnterChat(parsed.formData);
+            }, 350);
+          }
+        }
+      }
+    } catch {
+      // ignore URL/storage parse errors
+    }
+  }, []);
+
+  // Cross-Tab Live Sync: If user clicks 1-Tap link in WhatsApp and it opens in another tab, auto-verify this tab too!
+  useEffect(() => {
+    const handleStorageSync = (e) => {
+      if (e.key === 'reachskyline_otp_verified_signal' && e.newValue && generatedPhoneOtp) {
+        try {
+          const data = JSON.parse(e.newValue);
+          if (data?.otp === generatedPhoneOtp) {
+            setPhoneDigits(generatedPhoneOtp.split(''));
+          }
+        } catch {
+          // ignore
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorageSync);
+    return () => window.removeEventListener('storage', handleStorageSync);
+  }, [generatedPhoneOtp]);
+
+  // Instant Auto-Submit as soon as all 6 digits are entered or pasted
+  useEffect(() => {
+    if (step !== 'whatsapp_otp' || !generatedPhoneOtp) return;
+    const enteredPhone = phoneDigits.join('');
+    if (enteredPhone.length === 6 && !phoneDigits.includes('')) {
+      if (enteredPhone === generatedPhoneOtp) {
+        setOtpError('');
+        const timer = setTimeout(() => {
+          finalizeAndEnterChat(formData);
+        }, 200);
+        return () => clearTimeout(timer);
+      } else {
+        setOtpError('Invalid WhatsApp OTP. Please check your WhatsApp and try again.');
+      }
+    }
+  }, [phoneDigits, step, generatedPhoneOtp]);
+
   // Send WhatsApp OTP Only
   const triggerWhatsAppOtp = async () => {
     setIsSendingOtp(true);
@@ -140,6 +235,19 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     const pCode = generateOtpCode();
     setGeneratedPhoneOtp(pCode);
     setPhoneDigits(['', '', '', '', '', '']);
+
+    try {
+      localStorage.setItem(
+        'reachskyline_pending_otp',
+        JSON.stringify({
+          formData,
+          otp: pCode,
+          ts: Date.now(),
+        })
+      );
+    } catch {
+      // ignore storage errors
+    }
 
     const res = await sendWhatsScaleOtp({
       phone: formData.phone.trim(),
@@ -169,6 +277,27 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     }
   };
 
+  // Smart Paste Handler: extracts 6-digit OTP even if user pastes the entire WhatsApp message
+  const handleOtpPaste = (e) => {
+    const text = e.clipboardData?.getData('text') || '';
+    const sixDigitMatch = text.match(/\b(\d{6})\b/);
+    const digits = sixDigitMatch
+      ? sixDigitMatch[1]
+      : text.replace(/\D/g, '').slice(0, 6);
+
+    if (digits.length > 0) {
+      e.preventDefault();
+      const updated = ['', '', '', '', '', ''];
+      digits.split('').forEach((ch, i) => {
+        if (i < 6) updated[i] = ch;
+      });
+      setPhoneDigits(updated);
+      setOtpError('');
+      const focusIdx = Math.min(digits.length, 5);
+      phoneInputRefs.current[focusIdx]?.focus();
+    }
+  };
+
   const handleCodeChange = (index, value) => {
     const cleanVal = value.replace(/\D/g, '');
     if (!cleanVal) {
@@ -176,6 +305,14 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
       updated[index] = '';
       setPhoneDigits(updated);
       setOtpError('');
+      return;
+    }
+
+    // If 6 digits are auto-filled by mobile keyboard one-time-code or pasted into any box
+    if (cleanVal.length === 6) {
+      setPhoneDigits(cleanVal.split(''));
+      setOtpError('');
+      phoneInputRefs.current[5]?.focus();
       return;
     }
 
@@ -223,22 +360,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
       return;
     }
 
-    const finalDesignation =
-      formData.designation === 'Others'
-        ? formData.customDesignation.trim()
-        : formData.designation;
-
-    const finalBusinessType =
-      formData.businessType === 'Others'
-        ? formData.customBusinessType.trim()
-        : formData.businessType;
-
-    onComplete({
-      ...formData,
-      designation: finalDesignation,
-      businessType: finalBusinessType,
-      phoneVerified: true,
-    });
+    finalizeAndEnterChat(formData);
   };
 
   const inputClass =
@@ -552,8 +674,10 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                       ref={(el) => (phoneInputRefs.current[idx] = el)}
                       type="text"
                       inputMode="numeric"
+                      autoComplete={idx === 0 ? 'one-time-code' : 'off'}
                       maxLength={6}
                       value={digit}
+                      onPaste={handleOtpPaste}
                       onChange={(e) => handleCodeChange(idx, e.target.value)}
                       onKeyDown={(e) => handleCodeKeyDown(idx, e)}
                       className="w-11 h-12 sm:w-12 sm:h-14 text-center text-lg font-bold rounded-lg bg-black border border-[#d39c12]/40 text-white focus:outline-none focus:border-[#d39c12] focus:ring-1 focus:ring-[#d39c12] transition"
