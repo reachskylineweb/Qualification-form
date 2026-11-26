@@ -637,8 +637,31 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     if (isTyping || isCompleted) return;
     setActiveMobileOption(option.value);
     const step = steps[currentStepIdx];
-    const updated = { ...answers, [step.id]: option.value };
+    const isFinalStep = currentStepIdx === steps.length - 1;
+    const updated = {
+      ...answers,
+      [step.id]: option.value,
+      ...(isFinalStep
+        ? {
+            appointment_booked_link_clicked:
+              option.value === 'Book by myself'
+                ? 'No (Opened self-booking button)'
+                : 'No (Team to schedule)',
+          }
+        : {}),
+    };
     setAnswers(updated);
+
+    // Track every single answer immediately in real-time so drop-offs are recorded
+    const nextStepObj = steps[currentStepIdx + 1];
+    syncLeadData(`CHAT_STEP_${currentStepIdx + 1}_${step.id.toUpperCase()}`, {
+      lastStep: nextStepObj
+        ? `Answered ${step.id} (Stopped at ${nextStepObj.id})`
+        : `Completed Chat (${option.label})`,
+      profile,
+      qualification: updated,
+    });
+
     setTimeout(() => {
       setActiveMobileOption(null);
       advanceWithHumanReply(updated, option.label, option.reaction);
@@ -658,6 +681,14 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
       capabilities_selected: selectedCapabilities,
     };
     setAnswers(updated);
+
+    // Track multi-select answer immediately in real-time
+    syncLeadData('CHAT_STEP_12_CAPABILITIES', {
+      lastStep: 'Answered capabilities_interest (Stopped at appointment_preference)',
+      profile,
+      qualification: updated,
+    });
+
     advanceWithHumanReply(updated, selectedCapabilities.join(', '), null);
   };
 

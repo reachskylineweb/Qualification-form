@@ -74,6 +74,12 @@ export default function App() {
     setHasUnsavedProgress(true);
     setIsFlowFinished(false);
     setStage('chat');
+    // Immediately track that user verified OTP and entered the Chat
+    syncLeadData('OTP_VERIFIED_ENTERED_CHAT', {
+      lastStep: 'Entered Chat (Waiting for Q1: Monthly Revenue)',
+      profile: data,
+      qualification: {},
+    });
   };
 
   const handleChatFinish = async (answers) => {

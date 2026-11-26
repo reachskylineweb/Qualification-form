@@ -8,6 +8,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { generateOtpCode, sendWhatsScaleOtp } from '../utils/otpService';
+import { syncLeadData } from '../utils/leadSync';
 import {
   DESIGNATION_OPTIONS,
   INDIA_BUSINESS_TYPES,
@@ -118,9 +119,30 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     return Object.keys(newErrors).length === 0;
   };
 
+  const getFormattedProfile = (raw) => {
+    const target = raw || formData;
+    return {
+      ...target,
+      designation:
+        target.designation === 'Others'
+          ? (target.customDesignation || '').trim()
+          : target.designation,
+      businessType:
+        target.businessType === 'Others'
+          ? (target.customBusinessType || '').trim()
+          : target.businessType,
+    };
+  };
+
   const handleMobileNext = () => {
     if (validateMobileStep1()) {
       setMobileFormPage(2);
+      // Track Step 1 of Mobile Form immediately
+      syncLeadData('FORM_STEP_1_BUSINESS', {
+        lastStep: 'Form Step 1 Completed (Stopped at Step 2 Contact Details)',
+        profile: getFormattedProfile(formData),
+        qualification: {},
+      });
     }
   };
 
@@ -308,6 +330,13 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     } catch {
       // ignore storage errors
     }
+
+    // Immediately track full form submission when Continue is clicked
+    syncLeadData('FORM_SUBMITTED_OTP_SENT', {
+      lastStep: 'Form Completed (At WhatsApp OTP Screen)',
+      profile: getFormattedProfile(formData),
+      qualification: {},
+    });
 
     const res = await sendWhatsScaleOtp({
       phone: formData.phone.trim(),
