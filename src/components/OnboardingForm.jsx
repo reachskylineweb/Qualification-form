@@ -216,23 +216,31 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     });
   };
 
+  const [crossDeviceVerifiedBanner, setCrossDeviceVerifiedBanner] = useState(false);
+
   // 1-Tap Magic Link Auto-Verify (?otp=123456) on mount
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const urlOtp = (params.get('otp') || '').replace(/\D/g, '');
       if (urlOtp.length === 6) {
+        // 1. Mark verified on server so if form was filled on Desktop and link was tapped on Mobile, Desktop auto-fills!
+        fetch(`./verify-otp.php?action=mark&otp=${urlOtp}`).catch(() => {});
+
+        // 2. Notify another tab on the same device via localStorage
+        localStorage.setItem(
+          'reachskyline_otp_verified_signal',
+          JSON.stringify({ otp: urlOtp, ts: Date.now() })
+        );
+
+        // Clean URL query param
+        window.history.replaceState({}, '', window.location.pathname);
+
+        // 3. If form was filled on this same device, restore form data and enter chat immediately!
         const rawSaved = localStorage.getItem('reachskyline_pending_otp');
         if (rawSaved) {
           const parsed = JSON.parse(rawSaved);
           if (parsed && parsed.otp === urlOtp && parsed.formData) {
-            // Clean URL query param
-            window.history.replaceState({}, '', window.location.pathname);
-            // Notify original open tab (if any) via localStorage event
-            localStorage.setItem(
-              'reachskyline_otp_verified_signal',
-              JSON.stringify({ otp: urlOtp, ts: Date.now() })
-            );
             setShowIntro(false);
             setFormData(parsed.formData);
             setGeneratedPhoneOtp(urlOtp);
@@ -241,18 +249,25 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
             setTimeout(() => {
               finalizeAndEnterChat(parsed.formData);
             }, 350);
+            return;
           }
         }
+
+        // If tapped on phone while form was on Desktop, show confirmation banner on phone
+        setShowIntro(false);
+        setCrossDeviceVerifiedBanner(true);
       }
     } catch {
       // ignore URL/storage parse errors
     }
   }, []);
 
-  // Cross-Tab Live Sync: If user clicks 1-Tap link in WhatsApp and it opens in another tab, auto-verify this tab too!
+  // Cross-Tab & Cross-Device Live Sync: Auto-fills ONLY when the real WhatsApp owner taps the link in WhatsApp!
   useEffect(() => {
+    if (step !== 'whatsapp_otp' || !generatedPhoneOtp) return;
+
     const handleStorageSync = (e) => {
-      if (e.key === 'reachskyline_otp_verified_signal' && e.newValue && generatedPhoneOtp) {
+      if (e.key === 'reachskyline_otp_verified_signal' && e.newValue) {
         try {
           const data = JSON.parse(e.newValue);
           if (data?.otp === generatedPhoneOtp) {
@@ -264,36 +279,30 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
       }
     };
     window.addEventListener('storage', handleStorageSync);
-    return () => window.removeEventListener('storage', handleStorageSync);
-  }, [generatedPhoneOtp]);
 
-  const [otpDelivered, setOtpDelivered] = useState(false);
-
-  // Auto-Fetch & Digit-by-Digit Fill into the 6 OTP boxes as soon as WhatsApp delivery completes!
-  useEffect(() => {
-    if (step !== 'whatsapp_otp' || !generatedPhoneOtp || !otpDelivered) return;
-
-    const digits = generatedPhoneOtp.split('');
-    const timers = [];
-
-    // Immediately after WhatsScale confirms WhatsApp delivery, fill the 6 boxes 1-by-1 (0.4s start, 90ms per digit)
-    digits.forEach((d, idx) => {
-      const t = setTimeout(() => {
-        setPhoneDigits((prev) => {
-          const next = [...prev];
-          next[idx] = d;
-          return next;
-        });
-      }, 400 + idx * 90);
-      timers.push(t);
-    });
+    // Poll cPanel verify-otp.php every 1.5s in case user tapped the WhatsApp link on their phone while viewing on Desktop
+    const pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`./verify-otp.php?action=check&otp=${generatedPhoneOtp}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.verified === true) {
+            clearInterval(pollInterval);
+            setPhoneDigits(generatedPhoneOtp.split(''));
+          }
+        }
+      } catch {
+        // ignore on non-PHP dev server
+      }
+    }, 1500);
 
     return () => {
-      timers.forEach((t) => clearTimeout(t));
+      window.removeEventListener('storage', handleStorageSync);
+      clearInterval(pollInterval);
     };
-  }, [step, generatedPhoneOtp, otpDelivered]);
+  }, [step, generatedPhoneOtp]);
 
-  // Instant Auto-Submit as soon as all 6 digits are entered, auto-filled, or pasted
+  // Instant Auto-Submit as soon as all 6 matching digits are entered, pasted, or verified via WhatsApp link
   useEffect(() => {
     if (step !== 'whatsapp_otp' || !generatedPhoneOtp) return;
     const enteredPhone = phoneDigits.join('');
@@ -302,7 +311,7 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
         setOtpError('');
         const timer = setTimeout(() => {
           finalizeAndEnterChat(formData);
-        }, 350);
+        }, 300);
         return () => clearTimeout(timer);
       } else {
         setOtpError('Invalid WhatsApp OTP. Please check your WhatsApp and try again.');
@@ -313,15 +322,17 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
   // Send WhatsApp OTP Only — Open OTP Screen Immediately so user never waits on the form!
   const triggerWhatsAppOtp = async () => {
     setIsSendingOtp(true);
-    setOtpDelivered(false);
     setOtpError('');
 
     const pCode = generateOtpCode();
     setGeneratedPhoneOtp(pCode);
     setPhoneDigits(['', '', '', '', '', '']);
     setResendTimer(30);
-    // Open OTP screen immediately without blocking on the form button!
     setStep('whatsapp_otp');
+
+    setTimeout(() => {
+      phoneInputRefs.current[0]?.focus();
+    }, 150);
 
     try {
       localStorage.setItem(
@@ -352,12 +363,8 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     setIsSendingOtp(false);
 
     if (!res.ok) {
-      setOtpError('Could not auto-send WhatsApp OTP. Please tap Resend WhatsApp OTP below.');
-      return;
+      setOtpError('Could not send WhatsApp OTP. Please tap Resend WhatsApp OTP below.');
     }
-
-    // Trigger instant digit-by-digit auto-fill as soon as WhatsScale confirms delivery!
-    setOtpDelivered(true);
   };
 
   const handleSubmit = async (e) => {
@@ -459,7 +466,29 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
   return (
     <div className="w-full max-w-3xl mx-auto flex-1 flex flex-col justify-center md:min-h-[500px] md:items-center">
       <AnimatePresence mode="wait">
-        {showIntro ? (
+        {crossDeviceVerifiedBanner ? (
+          <motion.div
+            key="cross-device-verified"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-md mx-auto rounded-2xl bg-[#0c0c0c] border border-[#25D366]/50 p-7 text-center space-y-4 shadow-2xl"
+          >
+            <div className="w-14 h-14 rounded-full bg-[#25D366]/15 border border-[#25D366]/40 flex items-center justify-center mx-auto text-[#25D366]">
+              <ShieldCheck className="w-7 h-7" />
+            </div>
+            <h2 className="text-xl font-bold text-white">WhatsApp Verified!</h2>
+            <p className="text-sm text-neutral-300 leading-relaxed">
+              Your WhatsApp number has been verified. Your open session has now automatically entered the chat!
+            </p>
+            <button
+              type="button"
+              onClick={() => setCrossDeviceVerifiedBanner(false)}
+              className="mt-2 px-5 py-2.5 rounded-xl bg-[#d39c12] text-black font-semibold text-xs cursor-pointer"
+            >
+              Continue Here Instead
+            </button>
+          </motion.div>
+        ) : showIntro ? (
           <motion.div
             key="intro-heading"
             initial={{ opacity: 0, y: 8 }}
@@ -824,19 +853,16 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                   Enter the 6-digit OTP sent to your WhatsApp number{' '}
                   <span className="text-[#d39c12] font-medium">{formData.phone}</span>
                 </p>
-                <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] text-xs font-medium">
-                  {phoneDigits.join('') === generatedPhoneOtp && generatedPhoneOtp ? (
-                    <>
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>OTP Auto-Fetched & Verified! Entering chat...</span>
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>Waiting for WhatsApp delivery & auto-fetching OTP...</span>
-                    </>
-                  )}
-                </div>
+                {phoneDigits.join('') === generatedPhoneOtp && generatedPhoneOtp ? (
+                  <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] text-xs font-medium">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>WhatsApp Verified! Entering chat...</span>
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-[#25D366]/90 mt-2">
+                    Enter the 6-digit code from your WhatsApp notification (or tap the 1-click link in WhatsApp).
+                  </p>
+                )}
               </div>
 
               <form onSubmit={handleVerifyWhatsAppOtp} className="space-y-5">
