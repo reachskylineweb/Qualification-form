@@ -509,7 +509,7 @@ const buildConversationFlow = (profile) => {
         { label: 'Automating your sales', value: 'Automating your sales' },
         { label: 'Optimizing digital spend', value: 'Optimizing digital spend' },
         { label: 'Improving lead quality', value: 'Improving lead quality' },
-        { label: 'Human interactive conversions', value: 'Human interactive conversions' },
+        { label: 'AI interactive conversions', value: 'AI interactive conversions' },
       ],
     },
 
