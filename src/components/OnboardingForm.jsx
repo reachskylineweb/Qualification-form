@@ -258,6 +258,33 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
     }
   };
 
+  // 1-Tap Clipboard Paste button handler
+  const handleClipboardPasteClick = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text) return;
+      const sixDigitMatch = text.match(/\b(\d{6})\b/);
+      const digits = sixDigitMatch
+        ? sixDigitMatch[1]
+        : text.replace(/\D/g, '').slice(0, 6);
+
+      if (digits.length > 0) {
+        const updated = ['', '', '', '', '', ''];
+        digits.split('').forEach((ch, i) => {
+          if (i < 6) updated[i] = ch;
+        });
+        setPhoneDigits(updated);
+        setOtpError('');
+        const focusIdx = Math.min(digits.length, 5);
+        phoneInputRefs.current[focusIdx]?.focus();
+      } else {
+        setOtpError('No 6-digit OTP found in your clipboard. Copy the code from WhatsApp first.');
+      }
+    } catch {
+      phoneInputRefs.current[0]?.focus();
+    }
+  };
+
   // Smart Paste Handler: extracts 6-digit OTP even if user pastes the entire WhatsApp message
   const handleOtpPaste = (e) => {
     const text = e.clipboardData?.getData('text') || '';
@@ -734,6 +761,16 @@ export default function OnboardingForm({ initialData, onComplete, onDirtyChange 
                       className="w-11 h-12 sm:w-12 sm:h-14 text-center text-lg font-bold rounded-lg bg-black border border-[#d39c12]/40 text-white focus:outline-none focus:border-[#d39c12] focus:ring-1 focus:ring-[#d39c12] transition"
                     />
                   ))}
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={handleClipboardPasteClick}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#181818] hover:bg-[#222222] border border-[#d39c12]/35 text-[#d39c12] text-xs font-medium transition cursor-pointer"
+                  >
+                    <span>📋 Paste Copied OTP</span>
+                  </button>
                 </div>
 
                 {otpError && <p className="text-xs text-rose-400">{otpError}</p>}

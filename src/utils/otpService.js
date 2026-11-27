@@ -32,9 +32,10 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
   const formattedPhone = cleanWhatsAppPhone(phone);
   const firstName = (name || 'there').split(' ')[0];
 
+  // Plain 6-digit OTP without asterisks around the number so Android/iOS notifications show the "Copy Code" button!
   const textMessage =
-    `*${otp}* is your *Reach Skyline* verification code.\n\n` +
-    `Hi ${firstName}! 👋 Please enter this 6-digit code on our page to continue.`;
+    `${otp} is your Reach Skyline verification code.\n\n` +
+    `Hi ${firstName}, your OTP code is ${otp}`;
 
   const payload = JSON.stringify({
     session: WHATSSCALE_SESSION_ID,
