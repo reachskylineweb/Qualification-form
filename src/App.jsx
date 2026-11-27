@@ -151,11 +151,11 @@ export default function App() {
         ) : (
           <motion.main
             key="thankyou-stage"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-4xl mx-auto px-3.5 sm:px-6 py-6 sm:py-12 min-h-[100dvh] flex flex-col justify-center"
+            className="w-full h-[100dvh] overflow-hidden px-3 sm:px-6 flex items-center justify-center"
           >
             <ThankYouPage
               profile={profileData}

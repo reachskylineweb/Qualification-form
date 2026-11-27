@@ -86,33 +86,33 @@ export default function ThankYouPage({ profile, qualification }) {
   const choseSelfBook = qualification?.appointment_preference === 'Book by myself';
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex-1 flex flex-col justify-center py-6 px-3.5 sm:px-6">
+    <div className="w-full max-w-3xl mx-auto flex items-center justify-center">
       <motion.div
-        initial={{ opacity: 0, y: 14, scale: 0.98 }}
+        initial={{ opacity: 0, y: 10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="rounded-2xl bg-[#0c0c0c] border border-[#d39c12]/40 p-6 sm:p-10 shadow-[0_0_50px_-15px_rgba(211,156,18,0.28)] text-center space-y-6"
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="w-full rounded-2xl bg-[#0c0c0c] border border-[#d39c12]/40 p-5 sm:p-7 shadow-[0_0_50px_-15px_rgba(211,156,18,0.28)] text-center space-y-3.5 sm:space-y-4"
       >
-        {/* Top Reach Skyline Logo */}
-        <div className="flex flex-col items-center gap-3">
+        {/* Top Reach Skyline Logo + Badge */}
+        <div className="flex flex-col items-center gap-2">
           <img
             src="./logo.png"
             alt="Reach Skyline"
-            className="h-16 sm:h-20 w-auto object-contain"
+            className="h-12 sm:h-14 w-auto object-contain"
           />
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#d39c12]/15 border border-[#d39c12]/40 text-[#d39c12] text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#d39c12]/15 border border-[#d39c12]/40 text-[#d39c12] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>1-on-1 Discovery Session</span>
           </div>
         </div>
 
         {/* Thank You Message */}
-        <div className="space-y-3 max-w-xl mx-auto">
-          <h1 className="text-2xl sm:text-4xl font-bold text-white tracking-tight leading-snug">
+        <div className="space-y-2 max-w-xl mx-auto">
+          <h1 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-snug">
             Thank You for Your Time,{' '}
             <span className="text-[#d39c12]">{firstName}!</span>
           </h1>
-          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
             {choseSelfBook ? (
               <>
                 We truly appreciate you sharing your insights and growth goals for{' '}
@@ -131,21 +131,21 @@ export default function ThankYouPage({ profile, qualification }) {
         </div>
 
         {/* Highlighted "See you on the live call!" Banner */}
-        <div className="max-w-md mx-auto rounded-xl bg-gradient-to-r from-[#171207] via-[#1f1808] to-[#171207] border border-[#d39c12]/45 px-5 py-3.5 flex items-center justify-center gap-2.5 shadow-inner">
+        <div className="max-w-sm mx-auto rounded-xl bg-gradient-to-r from-[#171207] via-[#1f1808] to-[#171207] border border-[#d39c12]/45 px-4 py-2.5 flex items-center justify-center gap-2 shadow-inner">
           <Sparkles className="w-4 h-4 text-[#d39c12] shrink-0" />
-          <span className="text-sm sm:text-base font-semibold text-[#d39c12]">
+          <span className="text-xs sm:text-sm font-semibold text-[#d39c12]">
             See you on the live call!
           </span>
         </div>
 
         {/* Optional Re-open Calendar Button if user chose self-booking */}
         {choseSelfBook && (
-          <div className="max-w-sm mx-auto pt-1">
+          <div className="max-w-xs mx-auto">
             <a
               href={GOOGLE_CALENDAR_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-3 px-5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] text-black font-bold text-xs sm:text-sm inline-flex items-center justify-center gap-2 transition shadow-md"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] text-black font-bold text-xs sm:text-sm inline-flex items-center justify-center gap-2 transition shadow-md"
             >
               <Calendar className="w-4 h-4 shrink-0" />
               <span>Open Appointment Calendar</span>
@@ -153,36 +153,35 @@ export default function ThankYouPage({ profile, qualification }) {
           </div>
         )}
 
-        {/* Divider */}
-        <div className="border-t border-[#d39c12]/20 pt-6 space-y-4">
-          <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-neutral-400">
+        {/* Divider + Connect Section (2x2 on Mobile, 4-Column Single Row on Desktop) */}
+        <div className="border-t border-[#d39c12]/20 pt-3.5 sm:pt-4 space-y-2.5">
+          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-neutral-400">
             Connect with Reach Skyline
           </p>
 
-          {/* Website & Social Media Links Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-left">
             {SOCIAL_LINKS.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between gap-3 p-3.5 rounded-xl bg-black hover:bg-[#16130b] border border-[#d39c12]/35 hover:border-[#d39c12] transition"
+                className="group flex items-center justify-between gap-2 p-2.5 sm:p-3 rounded-xl bg-black hover:bg-[#16130b] border border-[#d39c12]/35 hover:border-[#d39c12] transition"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-[#d39c12]/12 border border-[#d39c12]/30 flex items-center justify-center shrink-0 group-hover:bg-[#d39c12]/20 transition">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#d39c12]/12 border border-[#d39c12]/30 flex items-center justify-center shrink-0 group-hover:bg-[#d39c12]/20 transition">
                     {item.icon}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-sm font-semibold text-white group-hover:text-[#d39c12] transition">
+                    <div className="text-xs sm:text-sm font-semibold text-white group-hover:text-[#d39c12] transition truncate">
                       {item.name}
                     </div>
-                    <div className="text-xs text-neutral-400 truncate">
+                    <div className="text-[10px] sm:text-[11px] text-neutral-400 truncate">
                       {item.sub}
                     </div>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-neutral-500 group-hover:text-[#d39c12] shrink-0 transition" />
+                <ExternalLink className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#d39c12] shrink-0 transition" />
               </a>
             ))}
           </div>
