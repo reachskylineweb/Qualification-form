@@ -518,12 +518,12 @@ const buildConversationFlow = (profile) => {
       id: 'appointment_preference',
       botMessages: [
         `Thank you so much for sharing these insights about ${bizName}, ${firstName}! It gives me a clear understanding of your current scale and where you want to take the business next.`,
-        `Would you like to pick a time slot and book the appointment yourself, or would you prefer our team to schedule it for you?`,
+        `How would you like to schedule your 1-on-1 session with us?`,
       ],
       type: 'single',
       options: [
         {
-          label: "I'll book it myself",
+          label: "I'll book a slot myself",
           value: 'Book by myself',
           reaction: '',
         },
