@@ -750,9 +750,13 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
   const toggleCapability = (val) => {
     setSelectedCapabilities((prev) => {
       const cleanPrev = prev.filter((item) => validOptionValues.has(item));
-      return cleanPrev.includes(val)
-        ? cleanPrev.filter((item) => item !== val)
-        : [...cleanPrev, val];
+      if (val === 'Other') {
+        return cleanPrev.includes('Other') ? [] : ['Other'];
+      }
+      const withoutOther = cleanPrev.filter((item) => item !== 'Other');
+      return withoutOther.includes(val)
+        ? withoutOther.filter((item) => item !== val)
+        : [...withoutOther, val];
     });
   };
 
