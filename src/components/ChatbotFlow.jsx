@@ -416,7 +416,7 @@ const buildConversationFlow = (profile) => {
       getBotMessages: (ans) =>
         ans.marketing_spend === 'No spend yet'
           ? [`And out of those organic enquiries, roughly what percentage convert into paying customers?`]
-          : [`What does your lead-to-sale conversion rate and overall ROI look like from those leads?`],
+          : [`What does your lead-to-sale conversion rate and overall ROI look like from that marketing spend?`],
       type: 'single',
       getOptions: (ans) =>
         ans.marketing_spend === 'No spend yet'
@@ -603,6 +603,21 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     }
   }, []);
 
+  // Helper to resolve the next step index (handles conditional branching after marketing_spend)
+  const getNextStepIndex = (fromIdx, currentAnswers) => {
+    const current = steps[fromIdx];
+    if (current?.id === 'marketing_spend') {
+      if (currentAnswers.marketing_spend === 'No spend yet') {
+        const capIdx = steps.findIndex((s) => s.id === 'capabilities_interest');
+        if (capIdx !== -1) return capIdx;
+      } else {
+        const roiIdx = steps.findIndex((s) => s.id === 'marketing_conversion');
+        if (roiIdx !== -1) return roiIdx;
+      }
+    }
+    return fromIdx + 1;
+  };
+
   const advanceWithHumanReply = (updatedAnswers, userReplyText, empathyReaction) => {
     // 1. Show User's bubble immediately
     setChatHistory((prev) => [
@@ -616,7 +631,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     ]);
     scrollToBottom();
 
-    const nextIdx = currentStepIdx + 1;
+    const nextIdx = getNextStepIndex(currentStepIdx, updatedAnswers);
 
     if (nextIdx < steps.length) {
       const nextStep = steps[nextIdx];
@@ -699,7 +714,8 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     setAnswers(updated);
 
     // Track every single answer immediately in real-time so drop-offs are recorded
-    const nextStepObj = steps[currentStepIdx + 1];
+    const resolvedNextIdx = getNextStepIndex(currentStepIdx, updated);
+    const nextStepObj = steps[resolvedNextIdx];
     syncLeadData(`CHAT_STEP_${currentStepIdx + 1}_${step.id.toUpperCase()}`, {
       lastStep: nextStepObj
         ? `Answered ${step.id} (Stopped at ${nextStepObj.id})`
