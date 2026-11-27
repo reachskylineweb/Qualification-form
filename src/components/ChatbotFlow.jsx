@@ -509,7 +509,7 @@ const buildConversationFlow = (profile) => {
         { label: 'Automating your sales', value: 'Automating your sales' },
         { label: 'Optimizing digital spend', value: 'Optimizing digital spend' },
         { label: 'Improving lead quality', value: 'Improving lead quality' },
-        { label: 'Other', value: 'Other' },
+        { label: 'Others', value: 'Others' },
       ],
     },
 
@@ -750,13 +750,13 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
   const toggleCapability = (val) => {
     setSelectedCapabilities((prev) => {
       const cleanPrev = prev.filter((item) => validOptionValues.has(item));
-      if (val === 'Other') {
-        return cleanPrev.includes('Other') ? [] : ['Other'];
+      if (val === 'Others') {
+        return cleanPrev.includes('Others') ? [] : ['Others'];
       }
-      const withoutOther = cleanPrev.filter((item) => item !== 'Other');
-      return withoutOther.includes(val)
-        ? withoutOther.filter((item) => item !== val)
-        : [...withoutOther, val];
+      const withoutOthers = cleanPrev.filter((item) => item !== 'Others');
+      return withoutOthers.includes(val)
+        ? withoutOthers.filter((item) => item !== val)
+        : [...withoutOthers, val];
     });
   };
 
