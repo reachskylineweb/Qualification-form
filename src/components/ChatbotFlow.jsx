@@ -81,7 +81,7 @@ const formatTime = () => {
   return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-const RAM_SIR_AVATAR = './ram-sir-cutout.png';
+const RAM_SIR_AVATAR = './ram-sir-avatar.png';
 const GOOGLE_CALENDAR_BOOKING_URL =
   'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0y5aksSw_dtsMEvXCJePanowkKq21cmcnfk82DJJalPPuPHV9neYrUhcdj2f5R_KadDyoHcX-z';
 
@@ -836,21 +836,21 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   className="flex items-start gap-2 sm:gap-5 justify-start"
                 >
                   {!isUser ? (
-                    <div className="w-9 sm:w-20 shrink-0 flex items-start justify-center mt-0.5">
+                    <div className="w-11 sm:w-20 shrink-0 flex items-start justify-center mt-0.5">
                       {showStandingRam ? (
-                        <div className="w-9 h-9 sm:w-20 sm:h-20 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center">
+                        <div className="w-11 h-11 sm:w-20 sm:h-20 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden">
                           <img
                             src={RAM_SIR_AVATAR}
                             alt="Ram"
-                            className="w-8 h-11 sm:w-18 sm:h-24 object-cover object-top mt-0.5"
+                            className="w-full h-full object-cover"
                           />
                         </div>
                       ) : (
-                        <div className="w-9 sm:w-20" />
+                        <div className="w-11 sm:w-20" />
                       )}
                     </div>
                   ) : (
-                    <div className="w-9 sm:w-20 shrink-0" />
+                    <div className="w-11 sm:w-20 shrink-0" />
                   )}
 
                   <div
@@ -886,11 +886,11 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
             {/* Typing & Dotted Wave Indicator */}
             {isTyping && (
               <div className="flex items-start gap-2 sm:gap-5 justify-start">
-                <div className="w-9 h-9 sm:w-20 sm:h-20 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center shrink-0 mt-0.5">
+                <div className="w-11 h-11 sm:w-20 sm:h-20 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden shrink-0 mt-0.5">
                   <img
                     src={RAM_SIR_AVATAR}
                     alt="Ram"
-                    className="w-8 h-11 sm:w-18 sm:h-24 object-cover object-top mt-0.5"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="bg-white border border-neutral-200 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl shadow-sm flex items-center gap-2.5">
