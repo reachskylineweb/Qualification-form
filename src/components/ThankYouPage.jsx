@@ -78,6 +78,25 @@ const SOCIAL_LINKS = [
       </svg>
     ),
   },
+  {
+    name: 'YouTube',
+    sub: '@reachskyline',
+    href: 'https://youtube.com/@reachskyline?si=cl7TBcva0ZtsDiQI',
+    icon: (
+      <svg
+        className="w-5 h-5 text-[#d39c12]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
+        <path d="m10 15 5-3-5-3z" />
+      </svg>
+    ),
+  },
 ];
 
 export default function ThankYouPage({ profile, qualification }) {
@@ -86,7 +105,7 @@ export default function ThankYouPage({ profile, qualification }) {
   const choseSelfBook = qualification?.appointment_preference === 'Book by myself';
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex items-center justify-center">
+    <div className="w-full max-w-4xl mx-auto flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -159,14 +178,16 @@ export default function ThankYouPage({ profile, qualification }) {
             Connect with Reach Skyline
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-left">
-            {SOCIAL_LINKS.map((item) => (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-2.5 text-left">
+            {SOCIAL_LINKS.map((item, idx) => (
               <a
                 key={item.name}
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between gap-2 p-2.5 sm:p-3 rounded-xl bg-black hover:bg-[#16130b] border border-[#d39c12]/35 hover:border-[#d39c12] transition"
+                className={`group flex items-center justify-between gap-2 p-2.5 sm:p-3 rounded-xl bg-black hover:bg-[#16130b] border border-[#d39c12]/35 hover:border-[#d39c12] transition ${
+                  idx === SOCIAL_LINKS.length - 1 ? 'col-span-2 sm:col-span-1' : ''
+                }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#d39c12]/12 border border-[#d39c12]/30 flex items-center justify-center shrink-0 group-hover:bg-[#d39c12]/20 transition">
