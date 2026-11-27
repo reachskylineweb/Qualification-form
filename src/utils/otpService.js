@@ -31,16 +31,19 @@ export function cleanWhatsAppPhone(rawPhone) {
 export async function sendWhatsScaleOtp({ phone, name, otp }) {
   const formattedPhone = cleanWhatsAppPhone(phone);
   const firstName = (name || 'there').split(' ')[0];
+  const chatId = `${formattedPhone}@c.us`;
 
-  // Plain 6-digit OTP without asterisks around the number so Android/iOS notifications show the "Copy Code" button!
-  const textMessage =
-    `${otp} is your Reach Skyline verification code.\n\n` +
-    `Hi ${firstName}, your OTP code is ${otp}`;
-
-  const payload = JSON.stringify({
+  // Bubble 1: Greeting | Bubble 2: Standalone 6-digit OTP only (for 1-tap single-bubble copy!)
+  const introPayload = JSON.stringify({
     session: WHATSSCALE_SESSION_ID,
-    chatId: `${formattedPhone}@c.us`,
-    text: textMessage,
+    chatId,
+    text: `Hi ${firstName}! 👋 Your *Reach Skyline* verification code is:`,
+  });
+
+  const otpOnlyPayload = JSON.stringify({
+    session: WHATSSCALE_SESSION_ID,
+    chatId,
+    text: `${otp}`,
   });
 
   const isLocalhost =
@@ -54,24 +57,33 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
   for (const endpoint of endpoints) {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        const res = await fetch(endpoint, {
+        // 1. Send Intro Bubble
+        const res1 = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'X-Api-Key': WHATSSCALE_API_KEY,
             'Content-Type': 'application/json',
           },
-          body: payload,
+          body: introPayload,
         });
 
-        const contentType = res.headers.get('content-type') || '';
-        if (res.ok && !contentType.includes('application/x-httpd-php')) {
-          const text = await res.text();
-          if (!text.trim().startsWith('<?php') && text.trim().length > 0) {
-            return { ok: true, status: res.status };
+        const contentType = res1.headers.get('content-type') || '';
+        if (res1.ok && !contentType.includes('application/x-httpd-php')) {
+          const text1 = await res1.text();
+          if (!text1.trim().startsWith('<?php') && text1.trim().length > 0) {
+            // 2. Immediately send the standalone 6-digit OTP bubble right below it!
+            await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'X-Api-Key': WHATSSCALE_API_KEY,
+                'Content-Type': 'application/json',
+              },
+              body: otpOnlyPayload,
+            });
+            return { ok: true, status: res1.status };
           }
         }
-        // Retry same endpoint once only if Cloudflare returned 520/502/503
-        if (res.status < 500) break;
+        if (res1.status < 500) break;
       } catch (err) {
         console.warn(`Proxy attempt (${endpoint} #${attempt}) failed:`, err);
         break;
