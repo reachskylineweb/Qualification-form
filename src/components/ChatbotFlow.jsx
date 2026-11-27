@@ -828,9 +828,9 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
           </div>
         </div>
 
-        {/* Chat Stream Area (Centered max-w-5xl on desktop with tighter vertical spacing to eliminate excessive whitespace) */}
-        <div className="chat-stream-bg no-scrollbar flex-1 overflow-y-auto px-3.5 sm:px-8 py-3.5 sm:py-5">
-          <div className="max-w-5xl mx-auto space-y-3 sm:space-y-3.5">
+        {/* Chat Stream Area (Full-width on desktop with larger bubbles & zero wasted side/middle whitespace) */}
+        <div className="chat-stream-bg no-scrollbar flex-1 overflow-y-auto px-3.5 sm:px-10 py-3.5 sm:py-7">
+          <div className="w-full space-y-3 sm:space-y-4">
             {/* Chat Bubbles */}
             {chatHistory.map((item, idx) => {
               const isUser = item.sender === 'user';
@@ -843,42 +843,42 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   initial={{ opacity: 0, y: 8, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.18 }}
-                  className="flex items-start gap-2 sm:gap-4 justify-start"
+                  className="flex items-start gap-2 sm:gap-5 justify-start"
                 >
                   {!isUser ? (
-                    <div className="w-9 sm:w-16 shrink-0 flex items-start justify-center mt-0.5">
+                    <div className="w-9 sm:w-20 shrink-0 flex items-start justify-center mt-0.5">
                       {showStandingRam ? (
-                        <div className="w-9 h-9 sm:w-16 sm:h-16 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center">
+                        <div className="w-9 h-9 sm:w-20 sm:h-20 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center">
                           <img
                             src={RAM_SIR_AVATAR}
                             alt="Ram"
-                            className="w-8 h-11 sm:w-14 sm:h-20 object-cover object-top mt-0.5"
+                            className="w-8 h-11 sm:w-18 sm:h-24 object-cover object-top mt-0.5"
                           />
                         </div>
                       ) : (
-                        <div className="w-9 sm:w-16" />
+                        <div className="w-9 sm:w-20" />
                       )}
                     </div>
                   ) : (
-                    <div className="w-9 sm:w-16 shrink-0" />
+                    <div className="w-9 sm:w-20 shrink-0" />
                   )}
 
                   <div
-                    className={`relative px-3.5 sm:px-5 py-2.5 sm:py-3.5 rounded-2xl text-[14px] sm:text-[15.5px] leading-[1.45] sm:leading-relaxed ${
+                    className={`relative px-3.5 sm:px-6 py-2.5 sm:py-4 rounded-2xl text-[14px] sm:text-[17px] leading-[1.45] sm:leading-relaxed ${
                       isUser
-                        ? 'max-w-[78%] sm:max-w-[68%] bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tl-sm shadow-sm'
-                        : 'max-w-[74%] sm:max-w-[82%] mr-auto bg-white text-neutral-900 border border-neutral-200/90 rounded-tl-sm shadow-[0_2px_10px_rgba(0,0,0,0.04)]'
+                        ? 'max-w-[78%] sm:max-w-[75%] bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tl-sm shadow-sm'
+                        : 'max-w-[74%] sm:w-full sm:max-w-[88%] mr-auto bg-white text-neutral-900 border border-neutral-200/90 rounded-tl-sm shadow-[0_2px_12px_rgba(0,0,0,0.04)]'
                     }`}
                   >
                     {showStandingRam && (
-                      <span className="inline-block px-2.5 sm:px-3 py-0.5 rounded-full bg-[#fae8b0] text-[#855800] text-[11.5px] sm:text-xs font-bold mb-1.5">
+                      <span className="inline-block px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full bg-[#fae8b0] text-[#855800] text-[11.5px] sm:text-[13px] font-bold mb-1.5 sm:mb-2">
                         Ram • Reach Skyline
                       </span>
                     )}
                     <p className="whitespace-pre-line">{item.text}</p>
                     <div className="flex items-center justify-end gap-1 mt-1 -mb-0.5">
                       <span
-                        className={`text-[11px] ${
+                        className={`text-[11px] sm:text-xs ${
                           isUser ? 'text-neutral-600' : 'text-neutral-400'
                         }`}
                       >
@@ -895,16 +895,16 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
 
             {/* Typing & Dotted Wave Indicator */}
             {isTyping && (
-              <div className="flex items-start gap-2 sm:gap-4 justify-start">
-                <div className="w-9 h-9 sm:w-16 sm:h-16 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center shrink-0 mt-0.5">
+              <div className="flex items-start gap-2 sm:gap-5 justify-start">
+                <div className="w-9 h-9 sm:w-20 sm:h-20 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center shrink-0 mt-0.5">
                   <img
                     src={RAM_SIR_AVATAR}
                     alt="Ram"
-                    className="w-8 h-11 sm:w-14 sm:h-20 object-cover object-top mt-0.5"
+                    className="w-8 h-11 sm:w-18 sm:h-24 object-cover object-top mt-0.5"
                   />
                 </div>
-                <div className="bg-white border border-neutral-200 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl shadow-sm flex items-center gap-2.5">
-                  <span className="text-xs sm:text-sm font-semibold text-[#b47b05] tracking-wide">
+                <div className="bg-white border border-neutral-200 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl shadow-sm flex items-center gap-2.5">
+                  <span className="text-xs sm:text-base font-semibold text-[#b47b05] tracking-wide">
                     typing
                   </span>
                   <div className="flex items-center gap-1.5 pt-0.5">
@@ -922,7 +922,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="pt-2 sm:pt-3 pl-0 sm:pl-20 max-w-md"
+                className="pt-2 sm:pt-3 pl-0 sm:pl-24 max-w-md"
               >
                 {!appointmentRequested ? (
                   <div className="bg-white border border-[#d39c12]/60 rounded-2xl p-4 sm:p-5 shadow-md space-y-3">
@@ -941,6 +941,112 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                     <span>Appointment booking session opened (1 booking allowed per request).</span>
                   </div>
                 )}
+              </motion.div>
+            )}
+
+            {/* ================================================================= */}
+            {/* DESKTOP ONLY (sm+): Docked Right Below Active Message (No Gap!)   */}
+            {/* ================================================================= */}
+            {!isTyping && !isCompleted && currentStep && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className="hidden sm:block pt-3"
+              >
+                <div className="w-full bg-white border border-[#e3c66b] rounded-2xl px-7 py-5 shadow-[0_6px_24px_rgba(0,0,0,0.05)]">
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="flex items-end gap-[3px] h-5 shrink-0">
+                      <span className="w-1.5 h-2.5 bg-[#c89116] rounded-t-xs" />
+                      <span className="w-1.5 h-4 bg-[#c89116] rounded-t-xs" />
+                      <span className="w-1.5 h-5 bg-[#c89116] rounded-t-xs" />
+                    </div>
+                    <p className="text-base font-bold text-neutral-900">
+                      {currentStep.type === 'multi'
+                        ? 'Select one or more options below:'
+                        : 'Tap an option below to reply:'}
+                    </p>
+                  </div>
+
+                  {currentStep.type === 'single' && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
+                      {currentStepOptions.map((opt, idx) => {
+                        const IconComp = getDesktopOptionIcon(currentStep.id, idx);
+                        const isSelected = activeMobileOption === opt.value;
+                        return (
+                          <button
+                            type="button"
+                            key={opt.value}
+                            onClick={() => handleSingleSelect(opt)}
+                            className={`text-left px-5 py-4 rounded-xl border transition flex items-center gap-3.5 cursor-pointer shadow-xs ${
+                              isSelected
+                                ? 'bg-[#fcebb6] border-[#d39c12] text-neutral-950'
+                                : 'bg-white hover:bg-[#fdf3cf] border-[#dfbe5b] hover:border-[#d39c12] text-neutral-900'
+                            }`}
+                          >
+                            <div className="w-10 h-10 rounded-xl bg-[#fdf4d6] flex items-center justify-center shrink-0 text-[#c58b12]">
+                              <IconComp className="w-6 h-6" />
+                            </div>
+                            <span className="text-[15px] font-bold leading-snug">
+                              {opt.label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {currentStep.type === 'multi' && (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                        {currentStepOptions.map((opt, idx) => {
+                          const IconComp = getDesktopOptionIcon(currentStep.id, idx);
+                          const isSelected = selectedCapabilities.includes(opt.value);
+                          return (
+                            <button
+                              type="button"
+                              key={opt.value}
+                              onClick={() => toggleCapability(opt.value)}
+                              className={`text-left px-5 py-4 rounded-xl border transition flex items-center gap-3.5 cursor-pointer shadow-xs ${
+                                isSelected
+                                  ? 'bg-[#fcebb6] border-[#d39c12] text-neutral-950'
+                                  : 'bg-white hover:bg-[#fdf3cf] border-[#dfbe5b] text-neutral-900'
+                              }`}
+                            >
+                              <div
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                                  isSelected
+                                    ? 'bg-[#d39c12] text-black'
+                                    : 'bg-[#fdf4d6] text-[#c58b12]'
+                                }`}
+                              >
+                                {isSelected ? (
+                                  <Check className="w-5 h-5 stroke-[3]" />
+                                ) : (
+                                  <IconComp className="w-6 h-6" />
+                                )}
+                              </div>
+                              <span className="text-[15px] font-bold leading-snug">
+                                {opt.label}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          disabled={validSelectedCapabilities.length === 0}
+                          onClick={handleMultiSubmit}
+                          className="px-7 py-3 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
+                        >
+                          <span>Send Selected ({validSelectedCapabilities.length})</span>
+                          <Send className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </motion.div>
             )}
 
@@ -1040,107 +1146,6 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                     <span>Send Selected ({validSelectedCapabilities.length})</span>
                     <Send className="w-4 h-4" />
                   </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ================================================================= */}
-        {/* DESKTOP ONLY (sm+): Minimal & Clean Card with Gold Icon Options   */}
-        {/* ================================================================= */}
-        {!isTyping && !isCompleted && currentStep && (
-          <div className="hidden sm:block px-8 pb-4 pt-1 shrink-0">
-            <div className="max-w-5xl mx-auto bg-white border border-[#e3c66b] rounded-2xl px-6 py-4 shadow-[0_6px_24px_rgba(0,0,0,0.05)]">
-              <div className="flex items-center gap-2.5 mb-3.5">
-                <div className="flex items-end gap-[3px] h-4 shrink-0">
-                  <span className="w-1 h-2 bg-[#c89116] rounded-t-xs" />
-                  <span className="w-1 h-3.5 bg-[#c89116] rounded-t-xs" />
-                  <span className="w-1 h-4.5 bg-[#c89116] rounded-t-xs" />
-                </div>
-                <p className="text-sm font-bold text-neutral-900">
-                  {currentStep.type === 'multi'
-                    ? 'Select one or more options below:'
-                    : 'Tap an option below to reply:'}
-                </p>
-              </div>
-
-              {currentStep.type === 'single' && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 max-h-48 overflow-y-auto no-scrollbar">
-                  {currentStepOptions.map((opt, idx) => {
-                    const IconComp = getDesktopOptionIcon(currentStep.id, idx);
-                    const isSelected = activeMobileOption === opt.value;
-                    return (
-                      <button
-                        type="button"
-                        key={opt.value}
-                        onClick={() => handleSingleSelect(opt)}
-                        className={`text-left px-4 py-3 rounded-xl border transition flex items-center gap-3 cursor-pointer shadow-xs ${
-                          isSelected
-                            ? 'bg-[#fcebb6] border-[#d39c12] text-neutral-950'
-                            : 'bg-white hover:bg-[#fdf3cf] border-[#dfbe5b] hover:border-[#d39c12] text-neutral-900'
-                        }`}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-[#fdf4d6] flex items-center justify-center shrink-0 text-[#c58b12]">
-                          <IconComp className="w-5 h-5" />
-                        </div>
-                        <span className="text-[13.5px] font-semibold leading-snug">
-                          {opt.label}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {currentStep.type === 'multi' && (
-                <div className="space-y-3.5">
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-h-44 overflow-y-auto no-scrollbar">
-                    {currentStepOptions.map((opt, idx) => {
-                      const IconComp = getDesktopOptionIcon(currentStep.id, idx);
-                      const isSelected = selectedCapabilities.includes(opt.value);
-                      return (
-                        <button
-                          type="button"
-                          key={opt.value}
-                          onClick={() => toggleCapability(opt.value)}
-                          className={`text-left px-4 py-3 rounded-xl border transition flex items-center gap-3 cursor-pointer shadow-xs ${
-                            isSelected
-                              ? 'bg-[#fcebb6] border-[#d39c12] text-neutral-950'
-                              : 'bg-white hover:bg-[#fdf3cf] border-[#dfbe5b] text-neutral-900'
-                          }`}
-                        >
-                          <div
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                              isSelected
-                                ? 'bg-[#d39c12] text-black'
-                                : 'bg-[#fdf4d6] text-[#c58b12]'
-                            }`}
-                          >
-                            {isSelected ? (
-                              <Check className="w-4 h-4 stroke-[3]" />
-                            ) : (
-                              <IconComp className="w-5 h-5" />
-                            )}
-                          </div>
-                          <span className="text-[13.5px] font-semibold leading-snug">
-                            {opt.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      disabled={validSelectedCapabilities.length === 0}
-                      onClick={handleMultiSubmit}
-                      className="px-6 py-2.5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
-                    >
-                      <span>Send Selected ({validSelectedCapabilities.length})</span>
-                      <Send className="w-4 h-4" />
-                    </button>
-                  </div>
                 </div>
               )}
             </div>
