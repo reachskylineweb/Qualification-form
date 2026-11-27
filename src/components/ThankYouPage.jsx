@@ -4,12 +4,8 @@ import {
   CheckCircle2,
   Globe,
   ExternalLink,
-  Calendar,
   Sparkles,
 } from 'lucide-react';
-
-const GOOGLE_CALENDAR_BOOKING_URL =
-  'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0y5aksSw_dtsMEvXCJePanowkKq21cmcnfk82DJJalPPuPHV9neYrUhcdj2f5R_KadDyoHcX-z';
 
 const SOCIAL_LINKS = [
   {
@@ -157,22 +153,7 @@ export default function ThankYouPage({ profile, qualification }) {
           </span>
         </div>
 
-        {/* Optional Re-open Calendar Button if user chose self-booking */}
-        {choseSelfBook && (
-          <div className="max-w-xs mx-auto">
-            <a
-              href={GOOGLE_CALENDAR_BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-2.5 px-4 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] text-black font-bold text-xs sm:text-sm inline-flex items-center justify-center gap-2 transition shadow-md"
-            >
-              <Calendar className="w-4 h-4 shrink-0" />
-              <span>Open Appointment Calendar</span>
-            </a>
-          </div>
-        )}
-
-        {/* Divider + Connect Section (2x2 on Mobile, 4-Column Single Row on Desktop) */}
+        {/* Divider + Connect Section (2x2+1 on Mobile, 5-Column Single Row on Desktop) */}
         <div className="border-t border-[#d39c12]/20 pt-3.5 sm:pt-4 space-y-2.5">
           <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-neutral-400">
             Connect with Reach Skyline
