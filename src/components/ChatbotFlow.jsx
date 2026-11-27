@@ -817,14 +817,8 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Step Progress Pill on Desktop to add richness & reduce empty header space */}
-            <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#fdf4d6] border border-[#e7c86b] text-xs font-semibold text-[#8f6200]">
-              <span>Step {Math.min(currentStepIdx + 1, steps.length)} of {steps.length}</span>
-            </div>
-            <div className="p-1.5 text-neutral-700">
-              <MoreVertical className="w-5 h-5" />
-            </div>
+          <div className="p-1.5 text-neutral-700">
+            <MoreVertical className="w-5 h-5" />
           </div>
         </div>
 
