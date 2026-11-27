@@ -984,7 +984,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                             type="button"
                             key={opt.value}
                             onClick={() => handleSingleSelect(opt)}
-                            className={`text-left px-5 py-4 rounded-xl border transition flex items-center gap-3.5 cursor-pointer shadow-xs ${
+                            className={`option-gold-shimmer text-left px-5 py-4 rounded-xl border transition flex items-center gap-3.5 cursor-pointer ${
                               isSelected
                                 ? 'bg-[#fcebb6] border-[#d39c12] text-neutral-950'
                                 : 'bg-white hover:bg-[#fdf3cf] border-[#dfbe5b] hover:border-[#d39c12] text-neutral-900'
@@ -1013,7 +1013,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                               type="button"
                               key={opt.value}
                               onClick={() => toggleCapability(opt.value)}
-                              className={`text-left px-5 py-4 rounded-xl border transition flex items-center gap-3.5 cursor-pointer shadow-xs ${
+                              className={`option-gold-shimmer text-left px-5 py-4 rounded-xl border transition flex items-center gap-3.5 cursor-pointer ${
                                 isSelected
                                   ? 'bg-[#fcebb6] border-[#d39c12] text-neutral-950'
                                   : 'bg-white hover:bg-[#fdf3cf] border-[#dfbe5b] text-neutral-900'
@@ -1087,10 +1087,10 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                         type="button"
                         key={opt.value}
                         onClick={() => handleSingleSelect(opt)}
-                        className={`w-full px-3.5 py-2.5 rounded-xl border text-left text-[14px] transition flex items-center gap-3 cursor-pointer ${
+                        className={`option-gold-shimmer w-full px-3.5 py-2.5 rounded-xl border text-left text-[14px] transition flex items-center gap-3 cursor-pointer ${
                           isSelected
                             ? 'bg-[#fdf0c2] border-[#ebd074] text-neutral-950 font-semibold'
-                            : 'bg-white border-neutral-300 text-neutral-900 font-medium active:bg-[#fdf0c2] active:border-[#ebd074]'
+                            : 'bg-white border-[#dfbe5b] text-neutral-900 font-medium active:bg-[#fdf0c2] active:border-[#ebd074]'
                         }`}
                       >
                         <span
@@ -1121,10 +1121,10 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                           type="button"
                           key={opt.value}
                           onClick={() => toggleCapability(opt.value)}
-                          className={`w-full px-3.5 py-2.5 rounded-xl border text-left text-[14px] transition flex items-center gap-3 cursor-pointer ${
+                          className={`option-gold-shimmer w-full px-3.5 py-2.5 rounded-xl border text-left text-[14px] transition flex items-center gap-3 cursor-pointer ${
                             isSelected
                               ? 'bg-[#fdf0c2] border-[#ebd074] text-neutral-950 font-semibold'
-                              : 'bg-white border-neutral-300 text-neutral-900 font-medium'
+                              : 'bg-white border-[#dfbe5b] text-neutral-900 font-medium'
                           }`}
                         >
                           <span

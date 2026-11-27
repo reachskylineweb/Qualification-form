@@ -57,3 +57,75 @@
   background-image: radial-gradient(rgba(200, 145, 22, 0.11) 1px, transparent 0);
   background-size: 22px 22px;
 }
+
+/* Sparkling / Shimmering Gold Option Buttons ("மினுமினுப்பு") */
+@keyframes goldSweepShimmer {
+  0% {
+    transform: translateX(-140%) skewX(-22deg);
+  }
+  55%, 100% {
+    transform: translateX(240%) skewX(-22deg);
+  }
+}
+
+@keyframes goldGlowPulse {
+  0%, 100% {
+    box-shadow: 0 2px 10px rgba(211, 156, 18, 0.12), inset 0 0 0 1px rgba(211, 156, 18, 0.18);
+    border-color: #dfbe5b;
+  }
+  50% {
+    box-shadow: 0 4px 18px rgba(211, 156, 18, 0.34), inset 0 0 12px rgba(250, 224, 140, 0.38);
+    border-color: #d39c12;
+  }
+}
+
+.option-gold-shimmer {
+  position: relative;
+  overflow: hidden;
+  animation: goldGlowPulse 2.4s infinite ease-in-out;
+}
+
+.option-gold-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(253, 232, 160, 0.55) 45%,
+    rgba(255, 252, 235, 0.9) 50%,
+    rgba(253, 232, 160, 0.55) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-140%) skewX(-22deg);
+  animation: goldSweepShimmer 2.8s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.option-gold-shimmer:nth-child(2)::after,
+.option-gold-shimmer:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.option-gold-shimmer:nth-child(3)::after,
+.option-gold-shimmer:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.option-gold-shimmer:nth-child(4)::after,
+.option-gold-shimmer:nth-child(4) {
+  animation-delay: 0.75s;
+}
+.option-gold-shimmer:nth-child(5)::after,
+.option-gold-shimmer:nth-child(5) {
+  animation-delay: 1s;
+}
+.option-gold-shimmer:nth-child(6)::after,
+.option-gold-shimmer:nth-child(6) {
+  animation-delay: 1.25s;
+}
+.option-gold-shimmer:nth-child(7)::after,
+.option-gold-shimmer:nth-child(7) {
+  animation-delay: 1.5s;
+}
