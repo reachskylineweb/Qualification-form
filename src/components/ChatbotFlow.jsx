@@ -638,26 +638,28 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
       const bizName = profile?.businessName || 'your business';
       const choseSelfBook = updatedAnswers.appointment_preference === 'Book by myself';
 
-      const finalMessages = choseSelfBook
-        ? [
-            `Thank you once again for sharing your details about ${bizName}, ${firstName}! Please pick a convenient time slot using the button below.`,
-          ]
-        : [
-            `Thank you once again for sharing everything about ${bizName}, ${firstName}! Our team will review your details and reach out shortly to schedule your session. Have a wonderful day!`,
-          ];
-
-      playBotMessages(finalMessages, () => {
+      if (!choseSelfBook) {
+        // Directly open the separate Thank You Page!
         setIsCompleted(true);
-        // If user chose "Book for me", save immediately as one complete row.
-        // If user chose "Book by myself", wait for them to click "Book Your Appointment Here" so Calendar Link Clicked = Yes is saved in the same single row!
-        if (!choseSelfBook && onFinish) {
-          onFinish({
-            ...updatedAnswers,
-            appointment_booked_link_clicked: 'No (Team to schedule)',
-          });
-        }
-        scrollToBottom();
-      });
+        setTimeout(() => {
+          if (onFinish) {
+            onFinish({
+              ...updatedAnswers,
+              appointment_booked_link_clicked: 'No (Team to schedule)',
+            });
+          }
+        }, 350);
+      } else {
+        playBotMessages(
+          [
+            `Great, ${firstName}! Please pick a convenient time slot for ${bizName} using the button below.`,
+          ],
+          () => {
+            setIsCompleted(true);
+            scrollToBottom();
+          }
+        );
+      }
     }
   };
 
@@ -675,12 +677,6 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     if (onFinish) {
       onFinish(updated);
     }
-
-    const firstName = profile?.name?.split(' ')[0] || 'there';
-    const bizName = profile?.businessName || 'your business';
-    playBotMessages([
-      `Thank you, ${firstName}! It was great learning about ${bizName} today. Looking forward to speaking with you on the call. Have a great day!`,
-    ]);
   };
 
   const handleSingleSelect = (option) => {

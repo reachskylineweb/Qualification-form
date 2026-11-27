@@ -3,11 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 import OnboardingForm from './components/OnboardingForm';
 import ChatbotFlow from './components/ChatbotFlow';
+import ThankYouPage from './components/ThankYouPage';
 import { syncLeadData } from './utils/leadSync';
 
 export default function App() {
-  const [stage, setStage] = useState('onboarding'); // 'onboarding' | 'chat'
+  const [stage, setStage] = useState('onboarding'); // 'onboarding' | 'chat' | 'thankyou'
   const [profileData, setProfileData] = useState(null);
+  const [qualificationData, setQualificationData] = useState(null);
   const [hasUnsavedProgress, setHasUnsavedProgress] = useState(false);
   const [isFlowFinished, setIsFlowFinished] = useState(false);
 
@@ -85,6 +87,8 @@ export default function App() {
   const handleChatFinish = async (answers) => {
     setIsFlowFinished(true);
     setHasUnsavedProgress(false);
+    setQualificationData(answers);
+    setStage('thankyou');
     await syncLeadData('COMPLETED', {
       profile: profileData,
       qualification: answers,
@@ -129,7 +133,7 @@ export default function App() {
               onDirtyChange={(isDirty) => setHasUnsavedProgress(isDirty)}
             />
           </motion.main>
-        ) : (
+        ) : stage === 'chat' ? (
           <motion.main
             key="chat-stage"
             initial={{ opacity: 0 }}
@@ -142,6 +146,20 @@ export default function App() {
               profile={profileData}
               onFinish={handleChatFinish}
               onBackToProfile={handleRequestBackFromChat}
+            />
+          </motion.main>
+        ) : (
+          <motion.main
+            key="thankyou-stage"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+            className="w-full max-w-4xl mx-auto px-3.5 sm:px-6 py-6 sm:py-12 min-h-[100dvh] flex flex-col justify-center"
+          >
+            <ThankYouPage
+              profile={profileData}
+              qualification={qualificationData}
             />
           </motion.main>
         )}
