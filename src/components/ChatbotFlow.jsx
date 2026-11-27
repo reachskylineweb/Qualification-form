@@ -64,16 +64,16 @@ const MOBILE_STEP_TITLES = {
   revenue_today: 'Select your current monthly revenue',
   team_size: 'Select your current team size',
   market_size: 'Select your current market reach',
-  profitability: 'Select your current profitability',
+  profitability: 'Select your current profit margin',
   future_revenue: 'Select your revenue growth target',
   future_timeline: 'Select your target timeline',
   has_strategy: 'Do you have a clear strategy in place?',
   marketing_spend: 'Select your monthly marketing spend',
-  marketing_leads: 'Select your monthly enquiries volume',
+  marketing_leads: 'Select your monthly enquiry volume',
   marketing_conversion: 'Select your conversion rate & ROI',
   funnel_automated: 'Is your sales process automated?',
-  capabilities_interest: 'Select areas most important to you',
-  appointment_preference: 'Select your booking preference',
+  capabilities_interest: 'Select your top priority areas',
+  appointment_preference: 'How would you like to book your session?',
 };
 
 const formatTime = () => {
@@ -96,34 +96,34 @@ const buildConversationFlow = (profile) => {
       id: 'revenue_today',
       botMessages: [
         `Hey ${firstName}, Ram here from Reach Skyline! Thank you for sharing your details and telling us about ${bizName}${bizType ? ` (${bizType})` : ''}.`,
-        `To make our upcoming conversation super relevant for you, I would love to know a few quick things about where ${bizName} stands today. What does your current monthly revenue look like?`,
+        `To make our upcoming conversation truly relevant to you, I would love to learn a few quick details about where ${bizName} stands today. What is your current monthly revenue?`,
       ],
       type: 'single',
       options: [
         {
           label: 'Pre-revenue / Starting up',
           value: 'Pre-revenue',
-          reaction: `Starting up from scratch is always a bold move ${firstName}. Building the right base early on makes all the difference.`,
+          reaction: `Starting from scratch is always a bold move, ${firstName}. Building the right foundation early on makes all the difference.`,
         },
         {
           label: '₹1L to ₹5L / month',
           value: '₹1L to ₹5L / mo',
-          reaction: `That is a nice early run rate. You already have customers paying for what you offer.`,
+          reaction: `That is a great early run rate. You already have paying customers for what you offer.`,
         },
         {
           label: '₹5L to ₹25L / month',
           value: '₹5L to ₹25L / mo',
-          reaction: `That is a solid monthly number ${firstName}. You have a clear product-market fit going on for ${bizName}.`,
+          reaction: `That is a solid monthly run rate, ${firstName}. You clearly have strong product-market fit at ${bizName}.`,
         },
         {
           label: '₹25L to ₹1Cr / month',
           value: '₹25L to ₹1Cr / mo',
-          reaction: `Doing ₹25L+ a month takes real effort. You have built strong traction in your market.`,
+          reaction: `Generating ₹25L+ a month takes real execution. You have built strong traction in your market.`,
         },
         {
           label: 'Above ₹1Cr / month',
           value: 'Above ₹1Cr / mo',
-          reaction: `Crossing ₹1Cr a month is a serious milestone ${firstName}. Respect for building ${bizName} to this level.`,
+          reaction: `Crossing ₹1Cr a month is a major milestone, ${firstName}. Huge respect for scaling ${bizName} to this level.`,
         },
       ],
     },
@@ -135,49 +135,49 @@ const buildConversationFlow = (profile) => {
         {
           label: 'Just me (1)',
           value: '1',
-          reaction: `Running the whole show as a solo founder takes serious dedication. You are wearing every hat right now.`,
+          reaction: `Running the entire operation as a solo founder takes serious dedication. You are wearing every hat right now.`,
         },
         {
           label: '2 to 5 people',
           value: '2 to 5',
-          reaction: `A tight, close-knit team is always fast on execution and easy to coordinate.`,
+          reaction: `A lean, close-knit team is always fast on execution and easy to coordinate.`,
         },
         {
           label: '6 to 15 people',
           value: '6 to 15',
-          reaction: `That is a healthy team size where you have dedicated people handling key areas.`,
+          reaction: `That is a healthy team size with dedicated people handling key functions.`,
         },
         {
           label: '16 to 50 people',
           value: '16 to 50',
-          reaction: `Managing a team of that size means your day-to-day operations are moving at a good pace.`,
+          reaction: `Managing a team of that size means your day-to-day operations are moving at a strong pace.`,
         },
         {
           label: '50+ people',
           value: '50+',
-          reaction: `That is a full-fledged organization with serious manpower behind ${bizName}.`,
+          reaction: `That is a full-fledged organization with strong manpower behind ${bizName}.`,
         },
       ],
     },
     {
       id: 'market_size',
-      botMessages: [`And where do most of your customers come from today?`],
+      botMessages: [`Where do most of your customers come from today?`],
       type: 'single',
       options: [
         {
           label: 'Single City (Within my city)',
           value: 'Single City',
-          reaction: `Building a strong name in your home city first is always a great foundation.`,
+          reaction: `Building a strong reputation in your home city first is always a great foundation.`,
         },
         {
           label: 'Nearby Cities & Districts',
           value: 'Multi-City / District Level',
-          reaction: `Spreading across nearby districts shows your brand name is travelling well.`,
+          reaction: `Expanding across nearby districts shows your brand reputation is travelling well.`,
         },
         {
-          label: 'Across the Whole State',
+          label: 'Across the Entire State',
           value: 'State-Wide',
-          reaction: `Serving customers across the entire state gives you a really wide market to play in.`,
+          reaction: `Serving customers across the entire state gives you a wide market to operate in.`,
         },
         {
           label: 'Regional (Multiple States)',
@@ -187,54 +187,54 @@ const buildConversationFlow = (profile) => {
         {
           label: 'Pan-India (Across India)',
           value: 'Pan-India',
-          reaction: `Operating Pan-India is awesome because your growth is not tied to just one geography.`,
+          reaction: `Operating pan-India is fantastic because your growth is not limited to a single region.`,
         },
         {
-          label: 'India + Selected Foreign Countries',
+          label: 'India + Selected Countries',
           value: 'International',
-          reaction: `Serving both Indian and overseas clients is a great mix for business stability.`,
+          reaction: `Serving both Indian and overseas clients is a great mix for long-term stability.`,
         },
         {
           label: 'Worldwide (Global Clients)',
           value: 'Worldwide',
-          reaction: `Having clients coming in from around the world is a huge advantage for ${bizName}.`,
+          reaction: `Serving clients around the world is a major advantage for ${bizName}.`,
         },
       ],
     },
     {
       id: 'profitability',
-      botMessages: [`How is your profit margin looking at the end of the month?`],
+      botMessages: [`What does your current monthly profit margin look like?`],
       type: 'single',
       options: [
         {
           label: 'Negative Profit (In Loss / Investing)',
           value: 'Negative Profit',
-          reaction: `I appreciate your honesty ${firstName}. Almost every growing business goes through an investment phase before numbers turn around.`,
+          reaction: `I appreciate your honesty, ${firstName}. Almost every growing business goes through an investment phase before turning profitable.`,
         },
         {
           label: 'Break-even (No Profit, No Loss)',
           value: 'Break-even',
-          reaction: `Covering all your running costs is a fair baseline, though I know every founder works hard to see healthy profit at the end of the month.`,
+          reaction: `Covering all your operating costs is a solid baseline as you work toward healthy monthly margins.`,
         },
         {
           label: '0% to 9% Margin',
           value: '0% to 9% Margin',
-          reaction: `Staying in positive profit while running operations is good, even if the margin feels a bit tight right now.`,
+          reaction: `Staying profitable while running operations is good, even if the margin feels a bit tight right now.`,
         },
         {
           label: '10% to 19% (Good Margin)',
           value: '10% to 19% (Good Margin)',
-          reaction: `A 10% to 19% margin is a healthy, sustainable zone for a growing business.`,
+          reaction: `A 10% to 19% margin is a healthy, sustainable range for a growing business.`,
         },
         {
           label: '20% to 29% (Strong Margin)',
           value: '20% to 29% (Strong Margin)',
-          reaction: `Holding a 20%+ margin means your pricing and operations are really well balanced.`,
+          reaction: `Maintaining a 20%+ margin means your pricing and operations are well balanced.`,
         },
         {
-          label: '30% & More (High Margin)',
+          label: '30% & Above (High Margin)',
           value: '30%+ Margin',
-          reaction: `A 30%+ margin is super rare and gives you massive breathing room to grow.`,
+          reaction: `A 30%+ margin is impressive and gives you strong room to scale.`,
         },
       ],
     },
@@ -246,68 +246,68 @@ const buildConversationFlow = (profile) => {
       type: 'single',
       options: [
         {
-          label: '1x',
+          label: '1x (Consistent Growth)',
           value: '1x',
           reaction: `Making your current revenue steady and predictable month after month is a very practical priority.`,
         },
         {
-          label: '3x',
+          label: '3x Growth',
           value: '3x',
-          reaction: `Tripling from where you are today is an exciting and very realistic milestone to aim for.`,
+          reaction: `Tripling from where you are today is an exciting and achievable milestone to aim for.`,
         },
         {
-          label: '7x',
+          label: '7x Growth',
           value: '7x',
-          reaction: `Aiming for 7x shows you have big plans for ${bizName} in the coming months.`,
+          reaction: `Aiming for 7x growth shows you have ambitious plans for ${bizName}.`,
         },
         {
-          label: '10x',
+          label: '10x Growth',
           value: '10x',
-          reaction: `Love that 10x ambition ${firstName}. Thinking big is where category leaders are made.`,
+          reaction: `I love that 10x ambition, ${firstName}. Thinking big is how category leaders are built.`,
         },
       ],
     },
     {
       id: 'future_timeline',
-      botMessages: [`And what timeline do you have in your mind to hit that mark?`],
+      botMessages: [`What timeline do you have in mind to reach that goal?`],
       type: 'single',
       options: [
         {
           label: '1 Month',
           value: '1 Month',
-          reaction: `You are looking at an immediate sprint right now.`,
+          reaction: `You are looking at an immediate, fast-paced sprint right now.`,
         },
         {
           label: '6 Months',
           value: '6 Months',
-          reaction: `Six months is a really good runway to see meaningful transformation in a business.`,
+          reaction: `Six months is a great runway to see meaningful growth in a business.`,
         },
         {
           label: '1 Year',
           value: '1 Year',
-          reaction: `A one-year horizon gives you enough room to build something solid and sustainable.`,
+          reaction: `A one-year horizon gives you the right room to build something solid and sustainable.`,
         },
         {
           label: '3 Years',
           value: '3 Years',
-          reaction: `Having a clear three-year vision shows you are building ${bizName} for the long game.`,
+          reaction: `Having a clear three-year vision shows you are building ${bizName} for long-term success.`,
         },
       ],
     },
     {
       id: 'has_strategy',
-      botMessages: [`Do you already have a clear roadmap or strategy ready for this?`],
+      botMessages: [`Do you already have a clear roadmap or strategy in place to achieve this?`],
       type: 'single',
       options: [
         {
-          label: 'Yes',
+          label: 'Yes, we have a clear strategy',
           value: 'Yes',
           reaction: `Having clarity on your strategy already puts you ahead of most businesses.`,
         },
         {
-          label: 'No',
+          label: 'No, still figuring it out',
           value: 'No',
-          reaction: `Fair enough ${firstName}. Many founders know their target number clearly, and figuring out the exact roadmap is the next natural step.`,
+          reaction: `Fair enough, ${firstName}. Many founders have a clear target in mind, and mapping out the right strategy is the natural next step.`,
         },
       ],
     },
@@ -315,13 +315,13 @@ const buildConversationFlow = (profile) => {
     // --- 3. HOW IS YOUR MARKETING TODAY ---
     {
       id: 'marketing_spend',
-      botMessages: [`Coming to your marketing today, roughly how much are you investing in ads or marketing each month?`],
+      botMessages: [`Moving to your current marketing, roughly how much do you invest in ads or marketing each month?`],
       type: 'single',
       options: [
         {
           label: 'No spend yet',
           value: 'No spend yet',
-          reaction: `Interesting, so ${bizName} has grown purely without paid ads so far.`,
+          reaction: `Interesting, so ${bizName} has grown purely through organic channels without paid ads so far.`,
         },
         {
           label: 'Under ₹50k / month',
@@ -341,12 +341,12 @@ const buildConversationFlow = (profile) => {
         {
           label: '₹5L to ₹10L / month',
           value: '₹5L to ₹10L / month',
-          reaction: `A ₹5L to ₹10L monthly budget gives strong fuel for consistent customer acquisition.`,
+          reaction: `A ₹5L to ₹10L monthly budget provides strong fuel for consistent customer acquisition.`,
         },
         {
           label: 'Above ₹10L / month',
           value: 'Above ₹10L / month',
-          reaction: `Spending ₹10L+ every month is serious scale in the market.`,
+          reaction: `Investing ₹10L+ every month is serious scale in the market.`,
         },
       ],
     },
@@ -355,9 +355,9 @@ const buildConversationFlow = (profile) => {
       getBotMessages: (ans) =>
         ans.marketing_spend === 'No spend yet'
           ? [
-              `Since you are not running paid ads yet, how are customers finding you right now, and roughly how many enquiries come in a month?`,
+              `Since you are not running paid ads yet, how do customers usually find you, and roughly how many enquiries do you receive per month?`,
             ]
-          : [`From that marketing spend, roughly how many leads or enquiries come in every month?`],
+          : [`From that marketing spend, roughly how many leads or enquiries do you generate each month?`],
       type: 'single',
       getOptions: (ans) =>
         ans.marketing_spend === 'No spend yet'
@@ -365,34 +365,34 @@ const buildConversationFlow = (profile) => {
               {
                 label: 'Referrals & Word of Mouth (Under 50 / mo)',
                 value: 'Organic / Referrals (Under 50 leads)',
-                reaction: `Word of mouth is the strongest proof that your existing customers love your work.`,
+                reaction: `Word of mouth is the strongest proof that your existing customers value your work.`,
               },
               {
                 label: 'Organic Social Media / Content (50 to 200 / mo)',
                 value: 'Organic Social Media (50 to 200 leads)',
-                reaction: `Getting 50 to 200 enquiries purely from organic content is really impressive.`,
+                reaction: `Generating 50 to 200 enquiries purely from organic content is really impressive.`,
               },
               {
                 label: 'Website / Google Search / Walk-ins',
                 value: 'Organic Website / Google / Walk-ins',
-                reaction: `Customers finding you directly on Google or walking in means you have good organic visibility.`,
+                reaction: `Customers finding you directly on Google or walking in shows strong organic visibility.`,
               },
               {
                 label: 'Cold Calls / Direct B2B Outreach',
                 value: 'Direct Outreach / Cold Calls',
-                reaction: `Direct outreach takes grit, and it is a classic way to land B2B deals.`,
+                reaction: `Direct outreach takes persistence, and it is a proven way to win B2B deals.`,
               },
               {
-                label: 'Not getting regular leads yet',
+                label: 'Not getting regular enquiries yet',
                 value: 'No regular leads yet',
-                reaction: `Makes sense, without active campaigns or outreach, enquiry flow stays quiet.`,
+                reaction: `That makes sense. Without active campaigns or outreach, enquiry flow naturally stays quiet.`,
               },
             ]
           : [
               {
                 label: 'Under 50 leads / month',
                 value: 'Under 50 leads',
-                reaction: `So the enquiry volume is relatively niche and selective right now.`,
+                reaction: `So your enquiry volume is relatively niche and selective right now.`,
               },
               {
                 label: '50 to 200 leads / month',
@@ -402,12 +402,12 @@ const buildConversationFlow = (profile) => {
               {
                 label: '200 to 1,000 leads / month',
                 value: '200 to 1,000 leads',
-                reaction: `Getting 200 to 1,000 enquiries a month keeps the sales pipeline pretty busy.`,
+                reaction: `Generating 200 to 1,000 enquiries a month keeps the sales pipeline active.`,
               },
               {
                 label: 'Above 1,000 leads / month',
                 value: 'Above 1,000 leads',
-                reaction: `1,000+ leads a month is massive volume coming into your system.`,
+                reaction: `1,000+ leads a month is massive volume coming into your pipeline.`,
               },
             ],
     },
@@ -415,8 +415,8 @@ const buildConversationFlow = (profile) => {
       id: 'marketing_conversion',
       getBotMessages: (ans) =>
         ans.marketing_spend === 'No spend yet'
-          ? [`And out of those organic enquiries, roughly how many end up becoming paying customers?`]
-          : [`How is your lead-to-sale conversion rate and overall ROI looking from those leads?`],
+          ? [`And out of those organic enquiries, roughly what percentage convert into paying customers?`]
+          : [`What does your lead-to-sale conversion rate and overall ROI look like from those leads?`],
       type: 'single',
       getOptions: (ans) =>
         ans.marketing_spend === 'No spend yet'
@@ -424,12 +424,12 @@ const buildConversationFlow = (profile) => {
               {
                 label: 'Below 5% Conversion',
                 value: 'Organic: Below 5% Conversion',
-                reaction: `Even with organic enquiries, turning them into paying customers can sometimes be tricky.`,
+                reaction: `Even with organic enquiries, converting them into paying customers can sometimes be challenging.`,
               },
               {
                 label: '5% to 15% Conversion',
                 value: 'Organic: 5% to 15% Conversion',
-                reaction: `Converting 5% to 15% of incoming enquiries is a decent batting average.`,
+                reaction: `Converting 5% to 15% of incoming enquiries is a solid conversion rate.`,
               },
               {
                 label: '15% to 30% Conversion',
@@ -439,61 +439,61 @@ const buildConversationFlow = (profile) => {
               {
                 label: 'Above 30% (Mostly referral closures)',
                 value: 'Organic: Above 30% Conversion',
-                reaction: `Referral leads always close at a super high rate because the trust is already built in.`,
+                reaction: `Referral enquiries always close at a high rate because trust is already established.`,
               },
               {
-                label: 'Not tracked / No leads yet',
+                label: 'Not tracked yet',
                 value: 'Organic: Not tracked',
-                reaction: `Totally understandable, most teams don't track exact percentages when leads come in organically.`,
+                reaction: `Totally understandable. Many teams do not track exact percentages when enquiries come in organically.`,
               },
             ]
           : [
               {
                 label: 'Below 2% Conversion | Low ROI',
                 value: 'Below 2% Conv | Low ROI',
-                reaction: `Seeing leads come in while conversions stay under 2% is one of the toughest spots for any business owner.`,
+                reaction: `Seeing leads come in while conversions stay under 2% is a common challenge for growing businesses.`,
               },
               {
                 label: '2% to 5% Conversion | 1x to 2x ROI',
                 value: '2% to 5% Conv | 1x to 2x ROI',
-                reaction: `A 2% to 5% conversion keeps things moving, though 1x to 2x ROI leaves room for much better efficiency.`,
+                reaction: `A 2% to 5% conversion rate keeps things moving, while 1x to 2x ROI leaves room for better efficiency.`,
               },
               {
                 label: '5% to 15% Conversion | 3x to 5x ROI',
                 value: '5% to 15% Conv | 3x to 5x ROI',
-                reaction: `A 3x to 5x return with up to 15% conversion means your campaigns are pulling their weight well.`,
+                reaction: `A 3x to 5x return with up to 15% conversion means your campaigns are performing well.`,
               },
               {
                 label: 'Above 15% Conversion | 5x+ ROI',
                 value: 'Above 15% Conv | 5x+ ROI',
-                reaction: `Hitting 15%+ conversion and 5x+ ROI is top-tier performance in any industry.`,
+                reaction: `Achieving 15%+ conversion and 5x+ ROI is top-tier performance in any industry.`,
               },
               {
                 label: 'Not tracked properly yet',
                 value: 'Not tracked',
-                reaction: `That happens quite often when you are busy running daily operations.`,
+                reaction: `That happens quite often when you are focused on running daily operations.`,
               },
             ],
     },
     {
       id: 'funnel_automated',
-      botMessages: [`Right now, is your lead follow-up and sales process automated, or handled manually?`],
+      botMessages: [`Right now, is your lead follow-up and sales process automated?`],
       type: 'single',
       options: [
         {
-          label: 'Yes',
+          label: 'Yes, fully automated',
           value: 'Yes',
-          reaction: `Having automation running already saves a lot of daily manual effort for the team.`,
+          reaction: `Having automation in place already saves a lot of daily manual effort for your team.`,
         },
         {
-          label: 'No',
+          label: 'No, handled manually',
           value: 'No',
-          reaction: `Handling every single follow-up manually on calls and messages definitely takes up a lot of bandwidth.`,
+          reaction: `Handling every follow-up manually across calls and messages definitely takes up significant bandwidth.`,
         },
         {
-          label: 'Partly',
+          label: 'Partially automated',
           value: 'Partly',
-          reaction: `So you have a few tools in place, while your team still steps in for the rest of the follow-ups.`,
+          reaction: `So you have a few tools in place, while your team still handles the rest of the follow-ups manually.`,
         },
       ],
     },
@@ -502,7 +502,7 @@ const buildConversationFlow = (profile) => {
     {
       id: 'capabilities_interest',
       botMessages: [
-        `That gives me a complete picture of ${bizName} ${firstName}. Out of these four areas, which ones are most important to you right now?`,
+        `That gives me a clear picture of ${bizName}, ${firstName}. Out of these four areas, which ones are your top priorities right now?`,
       ],
       type: 'multi',
       options: [
@@ -517,18 +517,18 @@ const buildConversationFlow = (profile) => {
     {
       id: 'appointment_preference',
       botMessages: [
-        `Thank you so much for openly sharing everything about ${bizName}, ${firstName}! It really helps me understand your current scale and where you want to take the business next.`,
-        `Would you like to pick a time and book the appointment by yourself, or would you like our team to schedule it for you?`,
+        `Thank you so much for sharing these insights about ${bizName}, ${firstName}! It gives me a clear understanding of your current scale and where you want to take the business next.`,
+        `Would you like to pick a time slot and book the appointment yourself, or would you prefer our team to schedule it for you?`,
       ],
       type: 'single',
       options: [
         {
-          label: 'You can book by yourself',
+          label: "I'll book it myself",
           value: 'Book by myself',
           reaction: '',
         },
         {
-          label: 'By ourselves',
+          label: 'Have your team schedule it',
           value: 'Book for me (Team will contact)',
           reaction: '',
         },
@@ -640,10 +640,10 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
 
       const finalMessages = choseSelfBook
         ? [
-            `Thank you once again for taking the time to tell me about ${bizName}, ${firstName}! Please book your convenient time slot using the button below.`,
+            `Thank you once again for sharing your details about ${bizName}, ${firstName}! Please pick a convenient time slot using the button below.`,
           ]
         : [
-            `Thank you once again for taking the time to tell me all about ${bizName}, ${firstName}! Our team will review everything you shared and contact you shortly to schedule your session. Have a wonderful day!`,
+            `Thank you once again for sharing everything about ${bizName}, ${firstName}! Our team will review your details and reach out shortly to schedule your session. Have a wonderful day!`,
           ];
 
       playBotMessages(finalMessages, () => {
@@ -679,7 +679,7 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     const firstName = profile?.name?.split(' ')[0] || 'there';
     const bizName = profile?.businessName || 'your business';
     playBotMessages([
-      `Thank you ${firstName}! It was great learning about ${bizName} today. Looking forward to speaking with you on the call. Have a great day!`,
+      `Thank you, ${firstName}! It was great learning about ${bizName} today. Looking forward to speaking with you on the call. Have a great day!`,
     ]);
   };
 
