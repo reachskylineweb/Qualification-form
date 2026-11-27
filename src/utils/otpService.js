@@ -32,16 +32,9 @@ export async function sendWhatsScaleOtp({ phone, name, otp }) {
   const formattedPhone = cleanWhatsAppPhone(phone);
   const firstName = (name || 'there').split(' ')[0];
 
-  const baseUrl =
-    typeof window !== 'undefined'
-      ? `${window.location.origin}${window.location.pathname}`
-      : 'https://reachskyline.com/chat-session/';
-  const magicVerifyUrl = `${baseUrl}?otp=${otp}`;
-
   const textMessage =
     `*${otp}* is your *Reach Skyline* verification code.\n\n` +
-    `Hi ${firstName}! 👋 Tap the link below to auto-verify instantly without typing:\n` +
-    `${magicVerifyUrl}`;
+    `Hi ${firstName}! 👋 Please enter this 6-digit code on our page to continue.`;
 
   const payload = JSON.stringify({
     session: WHATSSCALE_SESSION_ID,
