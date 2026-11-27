@@ -718,17 +718,37 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
     }, 180);
   };
 
+  const currentStep = steps[currentStepIdx];
+  const currentStepOptions = currentStep
+    ? currentStep.getOptions
+      ? currentStep.getOptions(answers)
+      : currentStep.options
+    : [];
+
+  // Ensure multi-select state only ever contains valid options for the active step
+  const validOptionValues = new Set(currentStepOptions.map((o) => o.value));
+  const validSelectedCapabilities = selectedCapabilities.filter((val) =>
+    validOptionValues.has(val)
+  );
+
+  useEffect(() => {
+    setSelectedCapabilities([]);
+  }, [currentStepIdx]);
+
   const toggleCapability = (val) => {
-    setSelectedCapabilities((prev) =>
-      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
-    );
+    setSelectedCapabilities((prev) => {
+      const cleanPrev = prev.filter((item) => validOptionValues.has(item));
+      return cleanPrev.includes(val)
+        ? cleanPrev.filter((item) => item !== val)
+        : [...cleanPrev, val];
+    });
   };
 
   const handleMultiSubmit = () => {
-    if (selectedCapabilities.length === 0 || isTyping || isCompleted) return;
+    if (validSelectedCapabilities.length === 0 || isTyping || isCompleted) return;
     const updated = {
       ...answers,
-      capabilities_selected: selectedCapabilities,
+      capabilities_selected: validSelectedCapabilities,
     };
     setAnswers(updated);
 
@@ -739,15 +759,8 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
       qualification: updated,
     });
 
-    advanceWithHumanReply(updated, selectedCapabilities.join(', '), null);
+    advanceWithHumanReply(updated, validSelectedCapabilities.join(', '), null);
   };
-
-  const currentStep = steps[currentStepIdx];
-  const currentStepOptions = currentStep
-    ? currentStep.getOptions
-      ? currentStep.getOptions(answers)
-      : currentStep.options
-    : [];
 
   return (
     <div className="w-full h-full flex-1 flex flex-col bg-[#eef0f4]">
@@ -1020,11 +1033,11 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   </div>
                   <button
                     type="button"
-                    disabled={selectedCapabilities.length === 0}
+                    disabled={validSelectedCapabilities.length === 0}
                     onClick={handleMultiSubmit}
                     className="w-full py-2.5 px-5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer"
                   >
-                    <span>Send Selected ({selectedCapabilities.length})</span>
+                    <span>Send Selected ({validSelectedCapabilities.length})</span>
                     <Send className="w-4 h-4" />
                   </button>
                 </div>
@@ -1120,11 +1133,11 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   <div className="flex justify-end">
                     <button
                       type="button"
-                      disabled={selectedCapabilities.length === 0}
+                      disabled={validSelectedCapabilities.length === 0}
                       onClick={handleMultiSubmit}
                       className="px-6 py-2.5 rounded-xl bg-[#d39c12] hover:bg-[#e5b126] disabled:opacity-40 disabled:cursor-not-allowed text-black text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
                     >
-                      <span>Send Selected ({selectedCapabilities.length})</span>
+                      <span>Send Selected ({validSelectedCapabilities.length})</span>
                       <Send className="w-4 h-4" />
                     </button>
                   </div>
