@@ -830,11 +830,9 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                   initial={{ opacity: 0, y: 8, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.18 }}
-                  className={`flex items-start gap-2 sm:gap-4 ${
-                    isUser ? 'justify-end' : 'justify-start'
-                  }`}
+                  className="flex items-start gap-2 sm:gap-4 justify-start"
                 >
-                  {!isUser && (
+                  {!isUser ? (
                     <div className="w-9 sm:w-16 shrink-0 flex items-start justify-center mt-0.5">
                       {showStandingRam ? (
                         <div className="w-9 h-9 sm:w-16 sm:h-16 rounded-full bg-[#f5f3ec] border-2 border-[#ebd074] shadow-sm overflow-hidden flex items-start justify-center">
@@ -848,12 +846,14 @@ export default function ChatbotFlow({ profile, onFinish, onBackToProfile }) {
                         <div className="w-9 sm:w-16" />
                       )}
                     </div>
+                  ) : (
+                    <div className="w-9 sm:w-16 shrink-0" />
                   )}
 
                   <div
                     className={`relative px-3.5 sm:px-5 py-2.5 sm:py-3.5 rounded-2xl text-[14px] sm:text-[15.5px] leading-[1.45] sm:leading-relaxed ${
                       isUser
-                        ? 'max-w-[78%] sm:max-w-[68%] bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tr-sm shadow-sm'
+                        ? 'max-w-[78%] sm:max-w-[68%] bg-[#fdf0c2] text-neutral-900 border border-[#ebd074] font-semibold rounded-tl-sm shadow-sm'
                         : 'max-w-[74%] sm:max-w-[82%] mr-auto bg-white text-neutral-900 border border-neutral-200/90 rounded-tl-sm shadow-[0_2px_10px_rgba(0,0,0,0.04)]'
                     }`}
                   >
